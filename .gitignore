@@ -6,6 +6,9 @@
 [Ll]og/
 [Ll]ogs/
 [R r]elease/
+!Release/
+!Release/Installer/
+!Release/Installer/**
 InstallerOutput/
 TestResults/
 publish/
