@@ -1,0 +1,108 @@
+<UserControl x:Class="ScheduledCopyManager.Presentation.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:converters="clr-namespace:ScheduledCopyManager.Presentation.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="850">
+
+    <UserControl.Resources>
+        <converters:EnumToTurkishConverter x:Key="EnumToTurkishConverter"/>
+    </UserControl.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="15"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <TextBlock Grid.Row="0" Text="Uygulama Ayarları" FontSize="24" FontWeight="Bold" Foreground="#2C3E50"/>
+
+        <!-- Settings Form Area -->
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="0,0,10,0">
+                <!-- Startup & Tray -->
+                <GroupBox Header="Sistem ve Tepsi (Tray) Ayarları" Margin="0,0,0,15" Padding="12">
+                    <StackPanel TextElement.FontWeight="Normal">
+                        <CheckBox IsChecked="{Binding StartWithWindows}" Content="Windows açılışında otomatik çalıştır (Başlangıç)" Margin="0,5,0,8"/>
+                        <CheckBox IsChecked="{Binding StartMinimized}" Content="Uygulamayı simge durumunda (Tray) başlat" Margin="0,0,0,8"/>
+                        <CheckBox IsChecked="{Binding EnableTrayIcon}" Content="Sistem tepsi (Tray) simgesini aktif et" Margin="0,0,0,8"/>
+                        <CheckBox IsChecked="{Binding CloseToTray}" Content="Pencere kapatıldığında uygulamayı kapatma, tepsiye küçült" Margin="0,0,0,8"/>
+                        <CheckBox IsChecked="{Binding EnableNotifications}" Content="Windows bildirimlerini göster (Başarı / Hata)" Margin="0,0,0,5"/>
+                    </StackPanel>
+                </GroupBox>
+
+                <!-- Default Copy Rules -->
+                <GroupBox Header="Varsayılan Kopyalama Kuralları" Margin="0,0,0,15" Padding="12">
+                    <StackPanel TextElement.FontWeight="Normal">
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="220"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Varsayılan Çakışma Politikası:" VerticalAlignment="Center"/>
+                            <ComboBox Grid.Column="1" ItemsSource="{Binding ConflictPolicies}" SelectedItem="{Binding DefaultConflictPolicy}" Padding="6">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Converter={StaticResource EnumToTurkishConverter}}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </Grid>
+
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="220"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Varsayılan Yeniden Deneme Sayısı:" VerticalAlignment="Center"/>
+                            <TextBox Grid.Column="1" Text="{Binding DefaultRetryCount}" Padding="6"/>
+                        </Grid>
+
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="220"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Yeniden Deneme Gecikmesi (sn):" VerticalAlignment="Center"/>
+                            <TextBox Grid.Column="1" Text="{Binding DefaultRetryDelaySeconds}" Padding="6"/>
+                        </Grid>
+
+                        <Grid Margin="0,0,0,5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="220"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Eşzamanlı Maks. Görev Sayısı:" VerticalAlignment="Center"/>
+                            <TextBox Grid.Column="1" Text="{Binding MaxConcurrentJobs}" Padding="6"/>
+                        </Grid>
+                    </StackPanel>
+                </GroupBox>
+
+                <!-- Data & Paths -->
+                <GroupBox Header="Veri ve Konum Bilgileri" Margin="0,0,0,15" Padding="12">
+                    <StackPanel TextElement.FontWeight="Normal">
+                        <TextBlock Text="Veri Klasör Konumu (%LOCALAPPDATA%):" Margin="0,0,0,4"/>
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Text="{Binding DataDirectory}" IsReadOnly="True" Padding="6" Background="#F1F5F9" Grid.Column="0"/>
+                            <Button Content="📂 Aç" Command="{Binding OpenDataFolderCommand}" Padding="12,6" Margin="8,0,0,0" Grid.Column="1" Style="{StaticResource ModernPrimaryButtonStyle}"/>
+                        </Grid>
+                    </StackPanel>
+                </GroupBox>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Save Button -->
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
+            <Button Content="💾 Ayarları Kaydet" Command="{Binding SaveCommand}" Padding="18,10" Style="{StaticResource ModernSuccessButtonStyle}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

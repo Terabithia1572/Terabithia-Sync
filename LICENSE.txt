@@ -1,0 +1,48 @@
+====================================================================
+               TÜRKÇE LİSANS SÖZLEŞMESİ (TURKISH LICENSE AGREEMENT)
+====================================================================
+
+Telif Hakkı (c) 2026 Yunus İNAN. Tüm Hakları Saklıdır.
+
+1. LİSANS VE KULLANIM HAKLARI
+İşbu yazılım ("Terabithia Sync"), Yunus İNAN tarafından geliştirilmiştir.
+Bu yazılımın kullanılması, çoğaltılması, değiştirilmesi, birleştirilmesi,
+yayınlanması, dağıtılması veya satılması hakkı kişisel ve ticari kullanımlara
+sunulmuştur.
+
+2. TELİF HAKKI VE BİLDİRİM
+Tüm kopyalarda veya yazılımın önemli bölümlerinde yukarıdaki telif hakkı
+bildirimi ve işbu izin bildirimi yer almalıdır.
+
+3. GARANTİ VE SORUMLULUK REDDİ
+YAZILIM "OLDUĞU GİBİ" ESASINA GÖRE SAĞLANMAKTADIR. SATILABİLİRLİK, BELİRLİ BİR
+AMACA UYGUNLUK VEYA İHLAL ETMEME GARANTİLERİ DÂHİL ANCAK BUNLARLA SINIRLI
+OLMAMAK ÜZERE, AÇIK VEYA ZIMNİ HİÇBİR GARANTİ VERİLMEMEKTEDİR. YAZARLAR VEYA
+TELİF HAKKI SAHİPLERİ, YAZILIMDAN VEYA YAZILIMIN KULLANIMINDAN DOĞAN HİÇBİR
+İDDİA, HASAR VEYA DİĞER SORUMLULUKLARDAN SORUMLU TUTULAMAŻ.
+
+====================================================================
+                ENGLISH LICENSE AGREEMENT (MIT LICENSE)
+====================================================================
+
+MIT License
+
+Copyright (c) 2026 Yunus İNAN. All Rights Reserved.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

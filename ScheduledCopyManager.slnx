@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="ScheduledCopyManager.App/ScheduledCopyManager.App.csproj" />
+  <Project Path="ScheduledCopyManager.Domain/ScheduledCopyManager.Domain.csproj" />
+  <Project Path="ScheduledCopyManager.Infrastructure/ScheduledCopyManager.Infrastructure.csproj" />
+  <Project Path="ScheduledCopyManager.Presentation/ScheduledCopyManager.Presentation.csproj" />
+  <Project Path="ScheduledCopyManager.Tests/ScheduledCopyManager.Tests.csproj" />
+</Solution>

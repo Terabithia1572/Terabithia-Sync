@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows10.0.17763.0</TargetFramework>
+    <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>TerabithiaSync</AssemblyName>
+    <Version>1.0.0</Version>
+    <Company>Yunus İNAN</Company>
+    <Authors>Yunus İNAN</Authors>
+    <Product>Terabithia Sync</Product>
+    <Copyright>© Yunus İNAN - Tüm Hakları Saklıdır.</Copyright>
+    <Description>Zamanlı Dosya ve Klasör Kopyalama Yöneticisi</Description>
+    <ApplicationIcon>app_icon.ico</ApplicationIcon>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ScheduledCopyManager.Domain\ScheduledCopyManager.Domain.csproj" />
+    <ProjectReference Include="..\ScheduledCopyManager.Infrastructure\ScheduledCopyManager.Infrastructure.csproj" />
+    <ProjectReference Include="..\ScheduledCopyManager.Presentation\ScheduledCopyManager.Presentation.csproj" />
+  </ItemGroup>
+
+</Project>

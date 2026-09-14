@@ -1,0 +1,51 @@
+## Visual Studio / .NET Core / WPF .gitignore
+
+# Build & Publish outputs
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+[R r]elease/
+InstallerOutput/
+TestResults/
+publish/
+
+# Scratch & Temporary Tool Files
+scratch/
+*.tmp
+*.log
+*.bak
+
+# User-specific files
+*.user
+*.userprefs
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio / IDE folders
+.vs/
+.idea/
+.vscode/
+*.swp
+
+# OS generated files
+Thumbs.db
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.DS_Store
+
+# ReSharper / Rider
+_ReSharper*/
+*.ReSharper
+
+# Paket / NuGet
+*.nuget.props
+*.nuget.targets
+project.lock.json
+
+# Local App settings / Credentials
+*.env
+*.env.local
+*.pfx
+*.snk

@@ -1,0 +1,30 @@
+name: Build & Test
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    name: Build & Run Tests
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore Dependencies
+      run: dotnet restore ScheduledCopyManager.slnx
+
+    - name: Build Solution (Release)
+      run: dotnet build ScheduledCopyManager.slnx --configuration Release --no-restore
+
+    - name: Run Unit Tests
+      run: dotnet test ScheduledCopyManager.slnx --configuration Release --no-build --verbosity normal

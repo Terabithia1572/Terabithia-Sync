@@ -1,0 +1,119 @@
+<UserControl x:Class="ScheduledCopyManager.Presentation.Views.JobsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:converters="clr-namespace:ScheduledCopyManager.Presentation.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="850">
+
+    <UserControl.Resources>
+        <converters:StatusToColorConverter x:Key="StatusToColorConverter"/>
+        <converters:StatusToTextConverter x:Key="StatusToTextConverter"/>
+    </UserControl.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="15"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="15"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+                <TextBlock Text="Kopyalama Görevleri" FontSize="24" FontWeight="Bold" Foreground="#2C3E50"/>
+                <TextBlock Text="Zamanlanmış otomatik dosya ve klasör kopyalama işleriniz" FontSize="13" Foreground="#7F8C8D" Margin="0,3,0,0"/>
+            </StackPanel>
+            <Button Grid.Column="1" Content="➕ Yeni Görev Ekle" Command="{Binding CreateJobCommand}" 
+                    Padding="14,9" Style="{StaticResource ModernSuccessButtonStyle}"/>
+        </Grid>
+
+        <!-- Search Bar -->
+        <Border Grid.Row="2" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="8,4">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="🔍" VerticalAlignment="Center" Margin="5,0,10,0" Foreground="#94A3B8"/>
+                <TextBox Grid.Column="1" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" 
+                         BorderThickness="0" VerticalAlignment="Center" FontSize="13" Foreground="#1E293B"/>
+            </Grid>
+        </Border>
+
+        <!-- Job Cards List -->
+        <ScrollViewer Grid.Row="4" VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding Jobs}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Margin="0,0,0,12" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="15">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Toggle Enabled -->
+                                <CheckBox Grid.Column="0" IsChecked="{Binding Job.Enabled}" VerticalAlignment="Top" Margin="0,3,15,0"
+                                          Command="{Binding DataContext.ToggleEnabledCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                          CommandParameter="{Binding Job}">
+                                    <CheckBox.LayoutTransform>
+                                        <ScaleTransform ScaleX="1.3" ScaleY="1.3"/>
+                                    </CheckBox.LayoutTransform>
+                                </CheckBox>
+
+                                <!-- Job Info -->
+                                <StackPanel Grid.Column="1">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Job.Name}" FontSize="16" FontWeight="Bold" Foreground="#1E293B"/>
+                                        <Border Margin="10,0,0,0" Padding="6,2" CornerRadius="4" VerticalAlignment="Center"
+                                                Background="{Binding Job.LastResult, Converter={StaticResource StatusToColorConverter}}">
+                                            <TextBlock Text="{Binding Job.LastResult, Converter={StaticResource StatusToTextConverter}}" Foreground="White" FontSize="10" FontWeight="SemiBold"/>
+                                        </Border>
+                                    </StackPanel>
+
+                                    <Grid Margin="0,8,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="Hedef: " FontWeight="SemiBold" Foreground="#64748B"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding Job.DestinationPath}" Foreground="#334155" TextTrimming="CharacterEllipsis"/>
+                                    </Grid>
+
+                                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                        <TextBlock Text="Zamanlama: " FontWeight="SemiBold" Foreground="#64748B"/>
+                                        <TextBlock Text="{Binding ScheduleSummary}" Foreground="#2563EB" FontWeight="Medium"/>
+                                        <TextBlock Text="  |  Sonraki: " FontWeight="SemiBold" Foreground="#64748B" Margin="10,0,0,0"/>
+                                        <TextBlock Text="{Binding Job.NextRun, StringFormat=\{0:dd.MM.yyyy HH:mm:ss\}}" Foreground="#059669"/>
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <!-- Action Buttons -->
+                                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                    <Button Content="▶ Çalıştır" Padding="10,6" Margin="0,0,6,0" Style="{StaticResource ModernPrimaryButtonStyle}"
+                                            Command="{Binding DataContext.RunNowCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding Job}"/>
+                                    <Button Content="🔍 Ön İzleme" Padding="10,6" Margin="0,0,6,0" Style="{StaticResource ModernPurpleButtonStyle}"
+                                            Command="{Binding DataContext.DryRunCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding Job}"
+                                            ToolTip="Bu seçenek gerçek dosya kopyalama işlemini gerçekleştirmeden, hangi dosyaların kopyalanacağını ve işlemin sonucunun nasıl olacağını önceden kontrol etmenizi sağlar. Kaynak dosyalar değiştirilmez ve hedefe gerçek bir kopyalama yapılmaz."/>
+                                    <Button Content="✏️ Düzenle" Padding="10,6" Margin="0,0,6,0" Style="{StaticResource ModernSecondaryButtonStyle}"
+                                            Command="{Binding DataContext.EditJobCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding Job}"/>
+                                    <Button Content="🗑️ Sil" Padding="10,6" Style="{StaticResource ModernDangerButtonStyle}"
+                                            Command="{Binding DataContext.DeleteJobCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding Job}"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

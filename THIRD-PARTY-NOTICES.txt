@@ -1,0 +1,24 @@
+Terabithia Sync Third-Party Notices & Licenses
+==================================================
+
+This application incorporates open source software components:
+
+1. Quartz.NET
+   - License: Apache License 2.0
+   - Project: https://www.quartz-scheduler.net/
+
+2. Serilog & Serilog.Sinks.File
+   - License: Apache License 2.0
+   - Project: https://serilog.net/
+
+3. CommunityToolkit.Mvvm
+   - License: MIT License
+   - Project: https://github.com/CommunityToolkit/dotnet
+
+4. Microsoft.Toolkit.Uwp.Notifications
+   - License: MIT License
+   - Project: https://github.com/CommunityToolkit/WindowsCommunityToolkit
+
+5. Microsoft.Extensions.Hosting & System.Text.Json
+   - License: MIT License (.NET Foundation)
+   - Project: https://github.com/dotnet/runtime
