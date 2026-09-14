@@ -697,8 +697,6 @@ namespace ScheduledCopyManager.Infrastructure.Services
                 });
 
                 int retries = Math.Max(1, job.RetryCount);
-                bool itemSuccess = false;
-
                 for (int attempt = 1; attempt <= retries; attempt++)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
@@ -737,7 +735,6 @@ namespace ScheduledCopyManager.Infrastructure.Services
                         item.ErrorMessage = null;
                         filesCopied++;
                         bytesCopied += item.FileSize;
-                        itemSuccess = true;
                         _logService?.LogInformation($"Dosya yeniden denemeyle kopyalandı: {item.FileName}");
                         break;
                     }
