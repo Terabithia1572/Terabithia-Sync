@@ -5,15 +5,18 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:converters="clr-namespace:ScheduledCopyManager.Presentation.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="850">
+             d:DesignHeight="700" d:DesignWidth="850">
 
     <UserControl.Resources>
         <converters:StatusToColorConverter x:Key="StatusToColorConverter"/>
         <converters:StatusToTextConverter x:Key="StatusToTextConverter"/>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </UserControl.Resources>
 
     <Grid Margin="20">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="15"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="15"/>
             <RowDefinition Height="Auto"/>
@@ -35,8 +38,158 @@
                     Padding="14,9" Style="{StaticResource ModernSuccessButtonStyle}"/>
         </Grid>
 
+        <!-- Unfinished Recoverable Jobs Banner -->
+        <Border Grid.Row="2" Background="#FFFBEB" BorderBrush="#F59E0B" BorderThickness="1.5" CornerRadius="8" Padding="15" Margin="0,0,0,15"
+                Visibility="{Binding HasRecoverableJobs, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <StackPanel>
+                <TextBlock Text="⚠️ Tamamlanmamış Kopyalama Bulundu" FontSize="16" FontWeight="Bold" Foreground="#92400E" Margin="0,0,0,4"/>
+                <TextBlock Text="Geçmişte kesintiye uğramış kopyalama görevleri bulundu. Kaldığınız yerden güvenle devam edebilirsiniz." FontSize="12" Foreground="#B45309" Margin="0,0,0,10"/>
+                
+                <ItemsControl ItemsSource="{Binding RecoverableCheckpoints}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="White" BorderBrush="#FDE68A" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,8">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Grid.Column="0">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding JobName}" FontSize="15" FontWeight="Bold" Foreground="#1E293B"/>
+                                            <Border Margin="10,0,0,0" Padding="6,2" CornerRadius="4" VerticalAlignment="Center" Background="#D97706">
+                                                <TextBlock Text="KESİNTİYE UĞRADI" Foreground="White" FontSize="10" FontWeight="Bold"/>
+                                            </Border>
+                                        </StackPanel>
+                                        <TextBlock Text="{Binding InterruptionReason}" Foreground="#DC2626" FontSize="12" Margin="0,4,0,0" FontWeight="Medium"/>
+                                        <TextBlock Text="{Binding UpdatedAt, StringFormat='Son Güncelleme: \{0:dd.MM.yyyy HH:mm:ss\}'}" Foreground="#64748B" FontSize="11" Margin="0,3,0,0"/>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                        <Button Content="▶ Devam Et" Padding="10,6" Margin="0,0,6,0" Style="{StaticResource ModernSuccessButtonStyle}"
+                                                Command="{Binding DataContext.ResumeRecoveryCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}"/>
+                                        <Button Content="ℹ️ Ayrıntılar" Padding="10,6" Margin="0,0,6,0" Style="{StaticResource ModernSecondaryButtonStyle}"
+                                                Command="{Binding DataContext.ShowRecoveryDetailsCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}"/>
+                                        <Button Content="🗑️ Kurtarmayı İptal Et" Padding="10,6" Style="{StaticResource ModernDangerButtonStyle}"
+                                                Command="{Binding DataContext.DiscardRecoveryCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </Border>
+
+        <!-- Active Running Jobs Section -->
+        <Border Grid.Row="2" Background="#F8FAFC" BorderBrush="#3B82F6" BorderThickness="1.5" CornerRadius="8" Padding="15"
+                Visibility="{Binding HasActiveJobs, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <StackPanel>
+                <TextBlock Text="⚡ Aktif Kopyalama Görevleri" FontSize="16" FontWeight="Bold" Foreground="#1E3A8A" Margin="0,0,0,10"/>
+                <ItemsControl ItemsSource="{Binding ActiveJobs}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="White" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="8" Padding="15" Margin="0,0,0,10">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <!-- Row 0: Job Name, Status Badge, Start Time, Control Buttons -->
+                                    <Grid Grid.Row="0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding JobName}" FontSize="16" FontWeight="Bold" Foreground="#0F172A"/>
+                                            <Border Margin="10,0,0,0" Padding="8,3" CornerRadius="4" VerticalAlignment="Center" Background="#2563EB">
+                                                <TextBlock Text="{Binding StatusText}" Foreground="White" FontSize="11" FontWeight="Bold"/>
+                                            </Border>
+                                            <TextBlock Text="{Binding StartTimeText}" Foreground="#64748B" FontSize="12" Margin="15,0,0,0" VerticalAlignment="Center"/>
+                                        </StackPanel>
+
+                                        <!-- Live Action Buttons -->
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                            <!-- Pause button when running -->
+                                            <Button Content="⏸️ Duraklat" Command="{Binding PauseCommand}"
+                                                    Visibility="{Binding IsRunning, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                    Style="{StaticResource ModernSecondaryButtonStyle}" Padding="10,5" Margin="0,0,6,0"/>
+
+                                            <!-- Resume button when paused -->
+                                            <Button Content="▶️ Devam Et" Command="{Binding ResumeCommand}"
+                                                    Visibility="{Binding IsPaused, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                    Style="{StaticResource ModernSuccessButtonStyle}" Padding="10,5" Margin="0,0,6,0"/>
+
+                                            <!-- Stop button -->
+                                            <Button Content="⏹️ Durdur" Command="{Binding StopCommand}"
+                                                    Style="{StaticResource ModernPurpleButtonStyle}" Padding="10,5" Margin="0,0,6,0"/>
+
+                                            <!-- Cancel button -->
+                                            <Button Content="❌ İptal Et" Command="{Binding CancelCommand}"
+                                                    Style="{StaticResource ModernDangerButtonStyle}" Padding="10,5"/>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <!-- Row 1: Overall Progress Bar and Percentage -->
+                                    <Grid Grid.Row="1" Margin="0,10,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <ProgressBar Value="{Binding ProgressPercentage}" Minimum="0" Maximum="100" Height="14" Foreground="#3B82F6" Background="#E2E8F0"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding ProgressPercentage, StringFormat=\{0:F1\}%}" FontWeight="Bold" Foreground="#1E293B" Margin="10,0,0,0"/>
+                                    </Grid>
+
+                                    <!-- Row 2: Transfer Metrics (Bytes, Speed, Avg Speed, Remaining Time, Elapsed Time) -->
+                                    <UniformGrid Grid.Row="2" Columns="4" Margin="0,10,0,0">
+                                        <StackPanel Margin="0,0,10,0">
+                                            <TextBlock Text="Aktarılan Veri" FontSize="11" Foreground="#64748B" FontWeight="SemiBold"/>
+                                            <TextBlock Text="{Binding BytesCopiedText}" FontSize="13" FontWeight="Bold" Foreground="#0F172A"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="0,0,10,0">
+                                            <TextBlock Text="Aktarım Hızı" FontSize="11" Foreground="#64748B" FontWeight="SemiBold"/>
+                                            <TextBlock Text="{Binding CurrentSpeedText}" FontSize="13" FontWeight="Bold" Foreground="#2563EB"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="0,0,10,0">
+                                            <TextBlock Text="Kalan Süre" FontSize="11" Foreground="#64748B" FontWeight="SemiBold"/>
+                                            <TextBlock Text="{Binding RemainingTimeText}" FontSize="13" FontWeight="Bold" Foreground="#D97706"/>
+                                        </StackPanel>
+                                        <StackPanel>
+                                            <TextBlock Text="Geçen Süre" FontSize="11" Foreground="#64748B" FontWeight="SemiBold"/>
+                                            <TextBlock Text="{Binding ElapsedTimeText}" FontSize="13" FontWeight="Bold" Foreground="#475569"/>
+                                        </StackPanel>
+                                    </UniformGrid>
+
+                                    <!-- Row 3: Current File Path & Details -->
+                                    <Grid Grid.Row="3" Margin="0,10,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="Şu an kopyalanıyor: " FontSize="12" FontWeight="SemiBold" Foreground="#64748B"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding TrimmedFilePath}" ToolTip="{Binding CurrentFilePath}" FontSize="12" Foreground="#0284C7" FontWeight="Medium" TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Grid.Column="2" Text="{Binding CurrentFileProgressText}" FontSize="12" Foreground="#475569"/>
+                                    </Grid>
+
+                                    <!-- Row 4: File Counter Summary -->
+                                    <TextBlock Grid.Row="4" Text="{Binding FilesSummaryText}" FontSize="12" Foreground="#64748B" Margin="0,6,0,0"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </Border>
+
         <!-- Search Bar -->
-        <Border Grid.Row="2" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="8,4">
+        <Border Grid.Row="4" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="8,4">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -49,71 +202,89 @@
         </Border>
 
         <!-- Job Cards List -->
-        <ScrollViewer Grid.Row="4" VerticalScrollBarVisibility="Auto">
-            <ItemsControl ItemsSource="{Binding Jobs}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Border Margin="0,0,0,12" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="15">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
+        <ScrollViewer Grid.Row="6" VerticalScrollBarVisibility="Auto">
+            <Grid>
+                <ItemsControl ItemsSource="{Binding Jobs}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Margin="0,0,0,12" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="15">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
 
-                                <!-- Toggle Enabled -->
-                                <CheckBox Grid.Column="0" IsChecked="{Binding Job.Enabled}" VerticalAlignment="Top" Margin="0,3,15,0"
-                                          Command="{Binding DataContext.ToggleEnabledCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                          CommandParameter="{Binding Job}">
-                                    <CheckBox.LayoutTransform>
-                                        <ScaleTransform ScaleX="1.3" ScaleY="1.3"/>
-                                    </CheckBox.LayoutTransform>
-                                </CheckBox>
+                                    <!-- Toggle Enabled -->
+                                    <CheckBox Grid.Column="0" IsChecked="{Binding Job.Enabled}" VerticalAlignment="Top" Margin="0,3,15,0"
+                                              Command="{Binding DataContext.ToggleEnabledCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                              CommandParameter="{Binding Job}">
+                                        <CheckBox.LayoutTransform>
+                                            <ScaleTransform ScaleX="1.3" ScaleY="1.3"/>
+                                        </CheckBox.LayoutTransform>
+                                    </CheckBox>
 
-                                <!-- Job Info -->
-                                <StackPanel Grid.Column="1">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding Job.Name}" FontSize="16" FontWeight="Bold" Foreground="#1E293B"/>
-                                        <Border Margin="10,0,0,0" Padding="6,2" CornerRadius="4" VerticalAlignment="Center"
-                                                Background="{Binding Job.LastResult, Converter={StaticResource StatusToColorConverter}}">
-                                            <TextBlock Text="{Binding Job.LastResult, Converter={StaticResource StatusToTextConverter}}" Foreground="White" FontSize="10" FontWeight="SemiBold"/>
-                                        </Border>
+                                     <!-- Job Info -->
+                                    <StackPanel Grid.Column="1">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Job.Name}" FontSize="16" FontWeight="Bold" Foreground="#1E293B"/>
+                                            <Border Margin="10,0,0,0" Padding="6,2" CornerRadius="4" VerticalAlignment="Center"
+                                                    Background="{Binding CurrentStateColor}">
+                                                <TextBlock Text="{Binding CurrentStateText}" Foreground="White" FontSize="10" FontWeight="SemiBold"/>
+                                            </Border>
+                                        </StackPanel>
+
+                                        <Grid Margin="0,8,0,0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="Hedef: " FontWeight="SemiBold" Foreground="#64748B"/>
+                                            <TextBlock Grid.Column="1" Text="{Binding Job.DestinationPath}" Foreground="#334155" TextTrimming="CharacterEllipsis"/>
+                                        </Grid>
+
+                                        <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                            <TextBlock Text="Zamanlama: " FontWeight="SemiBold" Foreground="#64748B"/>
+                                            <TextBlock Text="{Binding ScheduleSummary}" Foreground="#2563EB" FontWeight="Medium"/>
+                                            <TextBlock Text="  |  Sonraki: " FontWeight="SemiBold" Foreground="#64748B" Margin="10,0,0,0"/>
+                                            <TextBlock Text="{Binding Job.NextRun, StringFormat=\{0:dd.MM.yyyy HH:mm:ss\}}" Foreground="#059669"/>
+                                        </StackPanel>
                                     </StackPanel>
 
-                                    <Grid Margin="0,8,0,0">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto"/>
-                                            <ColumnDefinition Width="*"/>
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock Text="Hedef: " FontWeight="SemiBold" Foreground="#64748B"/>
-                                        <TextBlock Grid.Column="1" Text="{Binding Job.DestinationPath}" Foreground="#334155" TextTrimming="CharacterEllipsis"/>
-                                    </Grid>
-
-                                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                                        <TextBlock Text="Zamanlama: " FontWeight="SemiBold" Foreground="#64748B"/>
-                                        <TextBlock Text="{Binding ScheduleSummary}" Foreground="#2563EB" FontWeight="Medium"/>
-                                        <TextBlock Text="  |  Sonraki: " FontWeight="SemiBold" Foreground="#64748B" Margin="10,0,0,0"/>
-                                        <TextBlock Text="{Binding Job.NextRun, StringFormat=\{0:dd.MM.yyyy HH:mm:ss\}}" Foreground="#059669"/>
+                                    <!-- Action Buttons -->
+                                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                        <Button Content="{Binding RunButtonText}" IsEnabled="{Binding CanRun}" Padding="10,6" Margin="0,0,6,0" Style="{StaticResource ModernPrimaryButtonStyle}"
+                                                Command="{Binding DataContext.RunNowCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding Job}"/>
+                                        <Button Content="🔍 Ön İzleme" IsEnabled="{Binding CanRun}" Padding="10,6" Margin="0,0,6,0" Style="{StaticResource ModernPurpleButtonStyle}"
+                                                Command="{Binding DataContext.DryRunCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding Job}"
+                                                ToolTip="Bu seçenek gerçek dosya kopyalama işlemini gerçekleştirmeden, hangi dosyaların kopyalanacağını ve işlemin sonucunun nasıl olacağını önceden kontrol etmenizi sağlar. Kaynak dosyalar değiştirilmez ve hedefe gerçek bir kopyalama yapılmaz."/>
+                                        <Button Content="✏️ Düzenle" Padding="10,6" Margin="0,0,6,0" Style="{StaticResource ModernSecondaryButtonStyle}"
+                                                Command="{Binding DataContext.EditJobCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding Job}"/>
+                                        <Button Content="🗑️ Sil" Padding="10,6" Style="{StaticResource ModernDangerButtonStyle}"
+                                                Command="{Binding DataContext.DeleteJobCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding Job}"/>
                                     </StackPanel>
-                                </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
 
-                                <!-- Action Buttons -->
-                                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                                    <Button Content="▶ Çalıştır" Padding="10,6" Margin="0,0,6,0" Style="{StaticResource ModernPrimaryButtonStyle}"
-                                            Command="{Binding DataContext.RunNowCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding Job}"/>
-                                    <Button Content="🔍 Ön İzleme" Padding="10,6" Margin="0,0,6,0" Style="{StaticResource ModernPurpleButtonStyle}"
-                                            Command="{Binding DataContext.DryRunCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding Job}"
-                                            ToolTip="Bu seçenek gerçek dosya kopyalama işlemini gerçekleştirmeden, hangi dosyaların kopyalanacağını ve işlemin sonucunun nasıl olacağını önceden kontrol etmenizi sağlar. Kaynak dosyalar değiştirilmez ve hedefe gerçek bir kopyalama yapılmaz."/>
-                                    <Button Content="✏️ Düzenle" Padding="10,6" Margin="0,0,6,0" Style="{StaticResource ModernSecondaryButtonStyle}"
-                                            Command="{Binding DataContext.EditJobCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding Job}"/>
-                                    <Button Content="🗑️ Sil" Padding="10,6" Style="{StaticResource ModernDangerButtonStyle}"
-                                            Command="{Binding DataContext.DeleteJobCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding Job}"/>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,50,0,0">
+                    <StackPanel.Style>
+                        <Style TargetType="StackPanel">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding HasJobs}" Value="False">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
+                    <TextBlock Text="📁" FontSize="36" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                    <TextBlock Text="Henüz kopyalama görevi oluşturulmadı." Foreground="#64748B" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Yeni bir kopyalama görevi eklemek için yukarıdaki 'Yeni Görev Ekle' butonunu kullanabilirsiniz." Foreground="#94A3B8" FontSize="12" Margin="0,5,0,0" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Grid>
         </ScrollViewer>
     </Grid>
 </UserControl>

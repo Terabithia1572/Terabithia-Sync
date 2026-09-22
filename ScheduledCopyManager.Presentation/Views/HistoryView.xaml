@@ -11,6 +11,7 @@
         <converters:StatusToColorConverter x:Key="StatusToColorConverter"/>
         <converters:StatusToTextConverter x:Key="StatusToTextConverter"/>
         <converters:BytesToFormattedSizeConverter x:Key="BytesToFormattedConverter"/>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </UserControl.Resources>
 
     <Grid Margin="20">
@@ -51,38 +52,54 @@
 
         <!-- History DataGrid -->
         <Border Grid.Row="4" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="10">
-            <DataGrid ItemsSource="{Binding HistoryEntries}" AutoGenerateColumns="False" IsReadOnly="True"
-                      GridLinesVisibility="Horizontal" HeadersVisibility="Column" Background="Transparent" BorderThickness="0">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Görev Adı" Binding="{Binding JobName}" Width="170"/>
-                    <DataGridTextColumn Header="Tarih / Saat" Binding="{Binding StartTime, StringFormat=\{0:dd.MM.yyyy HH:mm:ss\}}" Width="150"/>
-                    <DataGridTextColumn Header="Süre" Binding="{Binding Duration, StringFormat=\{0:mm\\:ss\}}" Width="80"/>
-                    <DataGridTextColumn Header="Kopyalanan" Binding="{Binding FilesCopied}" Width="90"/>
-                    <DataGridTextColumn Header="Atlanan" Binding="{Binding FilesSkipped}" Width="80"/>
-                    <DataGridTextColumn Header="Hatalı" Binding="{Binding FilesFailed}" Width="80"/>
-                    <DataGridTextColumn Header="Aktarılan Veri" Binding="{Binding BytesCopied, Converter={StaticResource BytesToFormattedConverter}}" Width="110"/>
-                    <DataGridTemplateColumn Header="Durum" Width="130">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Border Padding="6,2" CornerRadius="4" HorizontalAlignment="Left"
-                                        Background="{Binding Status, Converter={StaticResource StatusToColorConverter}}">
-                                    <TextBlock Text="{Binding Status, Converter={StaticResource StatusToTextConverter}}" Foreground="White" FontSize="11" FontWeight="SemiBold"/>
-                                </Border>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
+            <Grid>
+                <DataGrid ItemsSource="{Binding HistoryEntries}" AutoGenerateColumns="False" IsReadOnly="True"
+                          GridLinesVisibility="Horizontal" HeadersVisibility="Column" Background="Transparent" BorderThickness="0">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Görev Adı" Binding="{Binding JobName}" Width="170"/>
+                        <DataGridTextColumn Header="Tarih / Saat" Binding="{Binding StartTime, StringFormat=\{0:dd.MM.yyyy HH:mm:ss\}}" Width="150"/>
+                        <DataGridTextColumn Header="Süre" Binding="{Binding Duration, StringFormat=\{0:mm\\:ss\}}" Width="80"/>
+                        <DataGridTextColumn Header="Kopyalanan" Binding="{Binding FilesCopied}" Width="90"/>
+                        <DataGridTextColumn Header="Atlanan" Binding="{Binding FilesSkipped}" Width="80"/>
+                        <DataGridTextColumn Header="Hatalı" Binding="{Binding FilesFailed}" Width="80"/>
+                        <DataGridTextColumn Header="Aktarılan Veri" Binding="{Binding BytesCopied, Converter={StaticResource BytesToFormattedConverter}}" Width="110"/>
+                        <DataGridTemplateColumn Header="Durum" Width="130">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border Padding="6,2" CornerRadius="4" HorizontalAlignment="Left"
+                                            Background="{Binding Status, Converter={StaticResource StatusToColorConverter}}">
+                                        <TextBlock Text="{Binding Status, Converter={StaticResource StatusToTextConverter}}" Foreground="White" FontSize="11" FontWeight="SemiBold"/>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
-                    <DataGridTemplateColumn Header="İşlem" Width="*">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button Content="🔍 Ayrıntılar" Padding="8,4" Style="{StaticResource ModernSecondaryButtonStyle}"
-                                        Command="{Binding DataContext.ShowDetailsCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                        CommandParameter="{Binding}"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                </DataGrid.Columns>
-            </DataGrid>
+                        <DataGridTemplateColumn Header="İşlem" Width="*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="🔍 Ayrıntılar" Padding="8,4" Style="{StaticResource ModernSecondaryButtonStyle}"
+                                            Command="{Binding DataContext.ShowDetailsCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="{Binding}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <TextBlock Text="Henüz kopyalama geçmişi bulunmuyor."
+                           Foreground="#64748B" FontSize="14" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding HasHistoryEntries}" Value="False">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </Grid>
         </Border>
     </Grid>
 </UserControl>

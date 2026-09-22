@@ -60,12 +60,15 @@ namespace ScheduledCopyManager.Presentation.ViewModels
                 {
                     HistoryEntries.Add(entry);
                 }
+                OnPropertyChanged(nameof(HasHistoryEntries));
             }
             catch (Exception ex)
             {
                 _logService.LogError("Geçmiş yüklenirken hata", ex);
             }
         }
+
+        public bool HasHistoryEntries => HistoryEntries.Count > 0;
 
         [RelayCommand]
         public async Task ShowDetailsAsync(HistoryEntry? entry)

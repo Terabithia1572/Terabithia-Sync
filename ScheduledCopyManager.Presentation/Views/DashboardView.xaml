@@ -104,9 +104,17 @@
 
                 <TextBlock Grid.Row="0" Text="Son Kopyalama Hareketleri" FontSize="16" FontWeight="Bold" Foreground="#1E293B"/>
 
-                <DataGrid Grid.Row="2" ItemsSource="{Binding RecentHistory}" AutoGenerateColumns="False" 
+                <DataGrid Grid.Row="2" ItemsSource="{Binding RecentHistory}" SelectedItem="{Binding SelectedHistoryEntry, Mode=TwoWay}" AutoGenerateColumns="False" 
                           IsReadOnly="True" GridLinesVisibility="Horizontal" HeadersVisibility="Column"
                           Background="Transparent" RowHeaderWidth="0" BorderThickness="0">
+                    <DataGrid.InputBindings>
+                        <KeyBinding Key="Return" Command="{Binding ShowHistoryDetailsCommand}" CommandParameter="{Binding SelectedHistoryEntry}"/>
+                    </DataGrid.InputBindings>
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <EventSetter Event="Control.MouseDoubleClick" Handler="OnDataGridRowMouseDoubleClick"/>
+                        </Style>
+                    </DataGrid.RowStyle>
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Görev Adı" Binding="{Binding JobName}" Width="180"/>
                         <DataGridTextColumn Header="Başlangıç" Binding="{Binding StartTime, StringFormat=\{0:dd.MM.yyyy HH:mm:ss\}}" Width="150"/>

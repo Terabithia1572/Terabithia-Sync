@@ -1,0 +1,167 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <sys:String x:Key="AppTitle">Terabithia Sync</sys:String>
+    <sys:String x:Key="Pause">Duraklat</sys:String>
+    <sys:String x:Key="Resume">Devam Et</sys:String>
+    <sys:String x:Key="Cancel">İptal</sys:String>
+    <sys:String x:Key="Stop">Durdur</sys:String>
+    <sys:String x:Key="Retry">Yeniden Dene</sys:String>
+    <sys:String x:Key="Failed">Başarısız</sys:String>
+    <sys:String x:Key="Completed">Tamamlandı</sys:String>
+    <sys:String x:Key="Copying">Kopyalanıyor</sys:String>
+    <sys:String x:Key="RemainingTime">Kalan Süre</sys:String>
+    <sys:String x:Key="TransferSpeed">Aktarım Hızı</sys:String>
+    <sys:String x:Key="Verification">Doğrulama</sys:String>
+    <sys:String x:Key="BandwidthLimit">Bant Genişliği Sınırı</sys:String>
+    <sys:String x:Key="Language">Dil</sys:String>
+    <sys:String x:Key="Settings_Title">Uygulama Ayarları</sys:String>
+    <sys:String x:Key="Settings_Save">Ayarları Kaydet</sys:String>
+    <sys:String x:Key="Settings_Saved_Title">Ayarlar Kaydedildi</sys:String>
+    <sys:String x:Key="Settings_Saved_Message">Uygulama ayarları başarıyla güncellendi.</sys:String>
+
+    <!-- Sidebar Navigation Keys -->
+    <sys:String x:Key="Str_Nav_Dashboard">📊  Özet Panosu</sys:String>
+    <sys:String x:Key="Str_Nav_Jobs">📋  Kopyalama Görevleri</sys:String>
+    <sys:String x:Key="Str_Nav_History">📜  Kopyalama Geçmişi</sys:String>
+    <sys:String x:Key="Str_Nav_Logs">📝  Günlükler (Logs)</sys:String>
+    <sys:String x:Key="Str_Nav_Settings">⚙️  Ayarlar</sys:String>
+    <sys:String x:Key="Str_Nav_Tools">🛠️  Araçlar</sys:String>
+    <sys:String x:Key="Str_Nav_About">ℹ️  Hakkında</sys:String>
+
+    <!-- Dashboard Keys -->
+    <sys:String x:Key="Str_Dash_Title">Özet Panosu</sys:String>
+    <sys:String x:Key="Str_Dash_SystemStatus">Sistem Durumu:</sys:String>
+    <sys:String x:Key="Str_Dash_SchedulerActive">Zamanlayıcı Aktif ve Çalışıyor</sys:String>
+    <sys:String x:Key="Str_Dash_RefreshData">🔄 Verileri Yenile</sys:String>
+    <sys:String x:Key="Str_Dash_TotalJobs">Toplam Görev</sys:String>
+    <sys:String x:Key="Str_Dash_EnabledJobs">Aktif Görevler</sys:String>
+    <sys:String x:Key="Str_Dash_TodayRuns">Bugünkü Çalışmalar</sys:String>
+    <sys:String x:Key="Str_Dash_NextScheduled">Yaklaşan Görev</sys:String>
+    <sys:String x:Key="Str_Dash_Results">İşlem Sonuçları</sys:String>
+    <sys:String x:Key="Str_Dash_RecentHistory">Son Kopyalama Hareketleri</sys:String>
+
+    <!-- Jobs View Keys -->
+    <sys:String x:Key="Str_Jobs_Title">Kopyalama Görevleri</sys:String>
+    <sys:String x:Key="Str_Jobs_NewJob">➕ Yeni Görev Oluştur</sys:String>
+    <sys:String x:Key="Str_Jobs_RunAllNow">▶️ Tümünü Şimdi Çalıştır</sys:String>
+
+    <!-- History View Keys -->
+    <sys:String x:Key="Str_History_Title">Kopyalama Geçmişi</sys:String>
+    <sys:String x:Key="Str_History_ClearAll">🧹 Geçmişi Temizle</sys:String>
+    <sys:String x:Key="Str_History_ColJobName">Görev Adı</sys:String>
+    <sys:String x:Key="Str_History_ColStartTime">Başlangıç</sys:String>
+    <sys:String x:Key="Str_History_ColDuration">Süre</sys:String>
+    <sys:String x:Key="Str_History_ColCopied">Kopyalanan</sys:String>
+    <sys:String x:Key="Str_History_ColFailed">Hatalı</sys:String>
+    <sys:String x:Key="Str_History_ColSize">Boyut</sys:String>
+    <sys:String x:Key="Str_History_ColStatus">Sonuç Durumu</sys:String>
+    <sys:String x:Key="Str_History_Details">Ayrıntılar</sys:String>
+
+    <!-- Logs View Keys -->
+    <sys:String x:Key="Str_Logs_Title">Uygulama Günlükleri</sys:String>
+    <sys:String x:Key="Str_Logs_OpenFolder">📂 Log Klasörünü Aç</sys:String>
+    <sys:String x:Key="Str_Logs_Refresh">🔄 Yenile</sys:String>
+    <sys:String x:Key="Str_Logs_Clear">🧹 Temizle</sys:String>
+    <sys:String x:Key="Str_Logs_FilterLevel">Seviye Filtresi:</sys:String>
+    <sys:String x:Key="Str_Logs_Search">🔍 Arama:</sys:String>
+    <sys:String x:Key="Str_Logs_TabJobLogs">📋 Görev İşlem Kayıtları (Gruplanmış)</sys:String>
+    <sys:String x:Key="Str_Logs_TabSystemLogs">⚙️ Sistem Günlükleri</sys:String>
+    <sys:String x:Key="Str_Logs_ColTime">Zaman</sys:String>
+    <sys:String x:Key="Str_Logs_ColLevel">Seviye</sys:String>
+    <sys:String x:Key="Str_Logs_ColMessage">Mesaj</sys:String>
+    <sys:String x:Key="Str_Logs_ColErrorDetail">Hata Detayı</sys:String>
+
+    <!-- Log Details Dialog Keys -->
+    <sys:String x:Key="Str_LogDetails_Title">Günlük Ayrıntıları</sys:String>
+    <sys:String x:Key="Str_LogDetails_CopyToClipboard">📋 Panoya Kopyala</sys:String>
+
+    <!-- Tools View Keys -->
+    <sys:String x:Key="Str_Tools_SubTitle">Sistem yardımcı araçları ve sürücü teşhisleri</sys:String>
+    <sys:String x:Key="Str_Tools_ConnectedDrivesTitle">BAĞLI SÜRÜCÜLER</sys:String>
+    <sys:String x:Key="Str_Tools_RefreshDrives">🔄 Yenile</sys:String>
+    <sys:String x:Key="Str_Tools_NoDrivesFound">Bağlı taşınabilir sürücü bulunamadı.</sys:String>
+    <sys:String x:Key="Str_Tools_ColDriveLetter">Sürücü</sys:String>
+    <sys:String x:Key="Str_Tools_ColVolumeLabel">Birim Etiketi</sys:String>
+    <sys:String x:Key="Str_Tools_ColVolumeSerial">Seri Numarası</sys:String>
+    <sys:String x:Key="Str_Tools_ColFileSystem">Dosya Sistemi</sys:String>
+    <sys:String x:Key="Str_Tools_ColCapacity">Kapasite</sys:String>
+    <sys:String x:Key="Str_Tools_ColFreeSpace">Boş Alan</sys:String>
+    <sys:String x:Key="Str_Tools_ColStatus">Durum</sys:String>
+    <sys:String x:Key="Str_Tools_QuickAccessTitle">HIZLI ERİŞİM</sys:String>
+    <sys:String x:Key="Str_Tools_OpenDataFolder">📂 Veri Klasörünü Aç</sys:String>
+    <sys:String x:Key="Str_Tools_OpenLogFolder">📂 Log Klasörünü Aç</sys:String>
+    <sys:String x:Key="Str_Tools_OpenCheckpointFolder">📂 Checkpoint Klasörünü Aç</sys:String>
+    <sys:String x:Key="Str_Tools_DiagnosticsTitle">TANILAMA BİLGİLERİ</sys:String>
+    <sys:String x:Key="Str_Tools_CopyDiagnostics">📋 Tanılama Bilgilerini Panoya Kopyala</sys:String>
+
+    <!-- About View Keys -->
+    <sys:String x:Key="Str_About_Title">Hakkında</sys:String>
+    <sys:String x:Key="Str_About_DeveloperTitle">Geliştirici &amp; Yayıncı</sys:String>
+    <sys:String x:Key="Str_About_Developer">Geliştirici:</sys:String>
+    <sys:String x:Key="Str_About_Version">Sürüm:</sys:String>
+    <sys:String x:Key="Str_About_TechTitle">Teknik Bilgiler</sys:String>
+    <sys:String x:Key="Str_About_Platform">Platform:</sys:String>
+    <sys:String x:Key="Str_About_Runtime">Çalışma Zamanı:</sys:String>
+    <sys:String x:Key="Str_About_AppType">Uygulama Tipi:</sys:String>
+    <sys:String x:Key="Str_About_FeaturesTitle">Öne Çıkan Özellikler</sys:String>
+
+    <!-- Common Keys -->
+    <sys:String x:Key="Str_Common_Close">Kapat</sys:String>
+    <sys:String x:Key="Str_Common_Save">Kaydet</sys:String>
+    <sys:String x:Key="Str_Common_Cancel">İptal</sys:String>
+    <sys:String x:Key="Str_UsbWaiting">Hedef sürücü bekleniyor</sys:String>
+
+    <!-- Phase 2.5 Keys -->
+    <sys:String x:Key="ActiveJobsTitle">Aktif Kopyalama Görevleri</sys:String>
+    <sys:String x:Key="StatusRunning">Çalışıyor...</sys:String>
+    <sys:String x:Key="StatusPaused">DURAKLATILDI</sys:String>
+    <sys:String x:Key="StatusCancelled">İPTAL EDİLDİ</sys:String>
+    <sys:String x:Key="CancelConfirmationTitle">İptal Onayı</sys:String>
+    <sys:String x:Key="CancelConfirmationMessage">Bu kopyalama işlemini iptal etmek istediğinizden emin misiniz?</sys:String>
+    <sys:String x:Key="BandwidthLimitTitle">Aktarım Hızı Sınırı</sys:String>
+    <sys:String x:Key="BandwidthLimitUnlimited">Sınırsız</sys:String>
+    <sys:String x:Key="BandwidthLimitCustom">Özel</sys:String>
+    <sys:String x:Key="BandwidthLimitHelp">Bu ayar kopyalama işleminin ağ veya disk üzerindeki bant genişliği kullanımını sınırlar. Sınırsız seçildiğinde Terabithia Sync mümkün olan en yüksek aktarım hızını kullanır.</sys:String>
+    <sys:String x:Key="RetryPolicyTitle">Otomatik Yeniden Deneme &amp; Hata Politikası</sys:String>
+    <sys:String x:Key="EnableAutoRetry">Otomatik Yeniden Denemeyi Etkinleştir</sys:String>
+    <sys:String x:Key="MaxRetryAttempts">Maksimum Deneme Sayısı</sys:String>
+    <sys:String x:Key="RetryDelaySeconds">Denemeler Arası Bekleme (Saniye)</sys:String>
+    <sys:String x:Key="UseExponentialBackoff">Üstel Geri Çekilme (Exponential Backoff)</sys:String>
+    <sys:String x:Key="RetryLockedFiles">Kilitli Dosyaları Yeniden Dene</sys:String>
+    <sys:String x:Key="WaitForDestination">Erişilemeyen Hedefi Bekle</sys:String>
+    <sys:String x:Key="ResumeWhenDestinationReturns">Hedef Bağlandığında Devam Et</sys:String>
+    <sys:String x:Key="FailureBehaviorTitle">Bir Hata Oluştuğunda:</sys:String>
+    <sys:String x:Key="VerificationModeTitle">Doğrulama Yöntemi</sys:String>
+    <sys:String x:Key="VerificationNone">Doğrulama Yok</sys:String>
+    <sys:String x:Key="VerificationSizeAndTimestamp">Boyut ve Zaman Damgası</sys:String>
+    <sys:String x:Key="VerificationSha256">SHA-256</sys:String>
+    <sys:String x:Key="VerificationHelpText">SHA-256 yöntemi en güçlü doğrulamayı sağlar ancak büyük dosyalar için işlem süresini uzatabilir.</sys:String>
+    <sys:String x:Key="EtaCalculating">Hesaplanıyor...</sys:String>
+    <sys:String x:Key="EtaPaused">Duraklatıldı</sys:String>
+
+    <!-- Phase 3 Keys -->
+    <sys:String x:Key="UnfinishedJobsTitle">⚠️ Tamamlanmamış Kopyalama Bulundu</sys:String>
+    <sys:String x:Key="RecoveryBannerSubtitle">Geçmişte kesintiye uğramış kopyalama görevleri bulundu. Kaldığınız yerden güvenle devam edebilirsiniz.</sys:String>
+    <sys:String x:Key="RecoveryActionResume">Devam Et</sys:String>
+    <sys:String x:Key="RecoveryActionDetails">Ayrıntılar</sys:String>
+    <sys:String x:Key="RecoveryActionDiscard">Kurtarmayı İptal Et</sys:String>
+    <sys:String x:Key="RecoveryDetailsTitle">Kurtarma Ayrıntıları</sys:String>
+    <sys:String x:Key="RecoveryDetailsSummary">Görev Özeti ve Kesinti Durumu</sys:String>
+    <sys:String x:Key="RecoveryLastState">Son Durum</sys:String>
+    <sys:String x:Key="RecoveryInterruptionReason">Kesinti Nedeni</sys:String>
+    <sys:String x:Key="RecoveryLastUpdated">Son Güncelleme</sys:String>
+    <sys:String x:Key="RecoveryCompletedFiles">Tamamlanan Dosyalar</sys:String>
+    <sys:String x:Key="RecoveryPendingFiles">Bekleyen Dosyalar</sys:String>
+    <sys:String x:Key="RecoveryFailedFiles">Hatalı Dosyalar</sys:String>
+    <sys:String x:Key="RecoveryTransferredData">Aktarılan Veri</sys:String>
+
+    <!-- Phase 3 v12 Keys -->
+    <sys:String x:Key="EmptyJobs">Henüz kopyalama görevi oluşturulmadı.</sys:String>
+    <sys:String x:Key="EmptyHistory">Henüz kopyalama geçmişi bulunmuyor.</sys:String>
+    <sys:String x:Key="EmptyLogs">Gösterilecek kayıt bulunmuyor.</sys:String>
+    <sys:String x:Key="EmptyLegacyHistoryDetails">Bu eski kayıtta dosya ayrıntıları mevcut değil.</sys:String>
+    <sys:String x:Key="EmptySearchResult">Aramanızla eşleşen kayıt bulunamadı.</sys:String>
+    <sys:String x:Key="PreflightTitle">Ön Doğrulama Uyarısı</sys:String>
+    <sys:String x:Key="DuplicateJobNameWarning">Bu isimde başka bir görev zaten bulunuyor.</sys:String>
+</ResourceDictionary>

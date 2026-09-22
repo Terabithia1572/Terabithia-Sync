@@ -27,5 +27,10 @@ namespace ScheduledCopyManager.Domain.Models
         public DateTime? LastRun { get; set; }
         public JobResultStatus? LastResult { get; set; }
         public DateTime? NextRun { get; set; }
+        public RetryPolicy RetryPolicy { get; set; } = new();
+        public VerificationMode VerificationMode { get; set; } = VerificationMode.SizeAndTimestamp;
+        public BandwidthLimit BandwidthLimit { get; set; } = new();
+        public string? TargetVolumeSerialNumber { get; set; }
+        public string? TargetVolumeLabel { get; set; }
     }
 }

@@ -15,22 +15,44 @@ namespace ScheduledCopyManager.Presentation.Services
         private readonly IFileCopyService? _fileCopyService;
         private readonly IJobRepository? _jobRepository;
         private readonly IHistoryRepository? _historyRepository;
+        private readonly IUsbDriveService? _usbDriveService;
+        private readonly ILogService? _logService;
+        private readonly IJobScheduler? _jobScheduler;
+        private readonly IJobExecutionGate? _jobExecutionGate;
+        private readonly ICheckpointRepository? _checkpointRepository;
 
         public DialogService(
             IPathValidationService pathValidationService,
             IFileCopyService? fileCopyService = null,
             IJobRepository? jobRepository = null,
-            IHistoryRepository? historyRepository = null)
+            IHistoryRepository? historyRepository = null,
+            IUsbDriveService? usbDriveService = null,
+            ILogService? logService = null,
+            IJobScheduler? jobScheduler = null,
+            IJobExecutionGate? jobExecutionGate = null,
+            ICheckpointRepository? checkpointRepository = null)
         {
             _pathValidationService = pathValidationService ?? throw new ArgumentNullException(nameof(pathValidationService));
             _fileCopyService = fileCopyService;
             _jobRepository = jobRepository;
             _historyRepository = historyRepository;
+            _usbDriveService = usbDriveService;
+            _logService = logService;
+            _jobScheduler = jobScheduler;
+            _jobExecutionGate = jobExecutionGate;
+            _checkpointRepository = checkpointRepository;
         }
 
         public Task<Job?> ShowJobEditorAsync(Job? job = null)
         {
-            var vm = new JobEditorViewModel(_pathValidationService, this, _fileCopyService, job);
+            var vm = new JobEditorViewModel(
+                _pathValidationService,
+                this,
+                _fileCopyService,
+                job,
+                jobRepository: _jobRepository,
+                usbDriveService: _usbDriveService,
+                logService: _logService);
             var win = new JobEditorView
             {
                 DataContext = vm,
@@ -52,7 +74,15 @@ namespace ScheduledCopyManager.Presentation.Services
         {
             if (entry == null) return Task.CompletedTask;
 
-            var vm = new HistoryDetailViewModel(entry, _jobRepository!, _fileCopyService!, _historyRepository!, this);
+            var vm = new HistoryDetailViewModel(
+                entry,
+                _jobRepository!,
+                _fileCopyService!,
+                _historyRepository!,
+                this,
+                _jobExecutionGate,
+                _checkpointRepository,
+                _jobScheduler);
             var win = new HistoryDetailView
             {
                 DataContext = vm,
@@ -61,6 +91,35 @@ namespace ScheduledCopyManager.Presentation.Services
             };
 
             vm.RequestClose += () => win.Close();
+            win.ShowDialog();
+            return Task.CompletedTask;
+        }
+
+        public Task ShowLogDetailsAsync(Domain.Interfaces.LogEntry logEntry)
+        {
+            if (logEntry == null) return Task.CompletedTask;
+
+            var vm = new LogDetailViewModel(logEntry);
+            var win = new LogDetailView(vm)
+            {
+                Owner = System.Windows.Application.Current?.MainWindow,
+                WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner
+            };
+
+            win.ShowDialog();
+            return Task.CompletedTask;
+        }
+
+        public Task ShowRecoveryDetailsAsync(JobCheckpoint checkpoint)
+        {
+            if (checkpoint == null) return Task.CompletedTask;
+
+            var vm = new RecoveryDetailsViewModel(checkpoint);
+            var win = new RecoveryDetailsView(vm)
+            {
+                Owner = System.Windows.Application.Current?.MainWindow
+            };
+
             win.ShowDialog();
             return Task.CompletedTask;
         }

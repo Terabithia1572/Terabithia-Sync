@@ -25,33 +25,53 @@ namespace ScheduledCopyManager.Infrastructure.Scheduler
 
         public async Task StartAsync()
         {
-            if (_isStarted) return;
+            string nowMs = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+            int pid = Environment.ProcessId;
+            int tid = Environment.CurrentManagedThreadId;
+
+            if (_isStarted)
+            {
+                _logService.LogInformation($"[EXECUTION TRACE] [{nowMs}] [PID:{pid}] [TID:{tid}] JobScheduler.StartAsync: Already started.");
+                return;
+            }
 
             var factory = new StdSchedulerFactory();
             _scheduler = await factory.GetScheduler();
             _scheduler.JobFactory = _jobFactory;
             await _scheduler.Start();
             _isStarted = true;
-            _logService.LogInformation("JobScheduler Quartz engine started successfully.");
+            _logService.LogInformation($"[EXECUTION TRACE] [{nowMs}] [PID:{pid}] [TID:{tid}] JobScheduler Quartz engine started successfully.");
         }
 
         public async Task ShutdownAsync()
         {
+            string nowMs = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+            int pid = Environment.ProcessId;
+            int tid = Environment.CurrentManagedThreadId;
+
             if (_scheduler != null && !_scheduler.IsShutdown)
             {
                 await _scheduler.Shutdown(waitForJobsToComplete: true);
                 _isStarted = false;
-                _logService.LogInformation("JobScheduler Quartz engine shut down.");
+                _logService.LogInformation($"[EXECUTION TRACE] [{nowMs}] [PID:{pid}] [TID:{tid}] JobScheduler Quartz engine shut down.");
             }
         }
 
         public async Task ScheduleJobAsync(Job job)
         {
+            string nowMs = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+            int pid = Environment.ProcessId;
+            int tid = Environment.CurrentManagedThreadId;
+
             if (_scheduler == null) await StartAsync();
 
             await UnscheduleJobAsync(job.Id);
 
-            if (!job.Enabled) return;
+            if (!job.Enabled)
+            {
+                _logService.LogInformation($"[EXECUTION TRACE] [{nowMs}] [PID:{pid}] [TID:{tid}] JobScheduler.ScheduleJobAsync SKIPPED (Job disabled): JobId={job.Id}, Name='{job.Name}'");
+                return;
+            }
 
             var quartzJob = JobBuilder.Create<QuartzCopyJob>()
                 .WithIdentity(job.Id.ToString(), "CopyJobs")
@@ -62,18 +82,53 @@ namespace ScheduledCopyManager.Infrastructure.Scheduler
             ITrigger trigger = BuildTriggerForJob(job);
 
             await _scheduler!.ScheduleJob(quartzJob, trigger);
-            _logService.LogInformation($"Scheduled job '{job.Name}' ({job.Id}) with schedule type {job.Schedule.ScheduleType}");
+
+            var nextFire = trigger.GetNextFireTimeUtc()?.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss.fff") ?? "N/A";
+            _logService.LogInformation($"[EXECUTION TRACE] [{nowMs}] [PID:{pid}] [TID:{tid}] Scheduled job '{job.Name}' ({job.Id}) TriggerKey='{trigger.Key}', ScheduleType={job.Schedule.ScheduleType}, NextFire={nextFire}, MisfireInstruction={trigger.MisfireInstruction}");
+            await LogQuartzInventoryAsync();
+        }
+
+        public async Task LogQuartzInventoryAsync()
+        {
+            if (_scheduler == null) return;
+            string nowMs = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+            int pid = Environment.ProcessId;
+
+            try
+            {
+                var jobKeys = await _scheduler.GetJobKeys(Quartz.Impl.Matchers.GroupMatcher<JobKey>.AnyGroup());
+                foreach (var jk in jobKeys)
+                {
+                    var triggers = await _scheduler.GetTriggersOfJob(jk);
+                    foreach (var tr in triggers)
+                    {
+                        var state = await _scheduler.GetTriggerState(tr.Key);
+                        var prevFire = tr.GetPreviousFireTimeUtc()?.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss.fff") ?? "N/A";
+                        var nextFire = tr.GetNextFireTimeUtc()?.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss.fff") ?? "N/A";
+                        var finalFire = tr.FinalFireTimeUtc?.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss.fff") ?? "N/A";
+                        _logService.LogInformation($"[QUARTZ INVENTORY] [{nowMs}] [PID:{pid}] JobKey='{jk}' TriggerKey='{tr.Key}' JobId={jk.Name} TriggerState={state} PreviousFire={prevFire} NextFire={nextFire} FinalFire={finalFire} MisfireInstruction={tr.MisfireInstruction}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logService.LogWarning($"[QUARTZ INVENTORY ERROR] {ex.Message}");
+            }
         }
 
         public async Task UnscheduleJobAsync(Guid jobId)
         {
+            string nowMs = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+            int pid = Environment.ProcessId;
+            int tid = Environment.CurrentManagedThreadId;
+
             if (_scheduler == null) return;
 
             var jobKey = new JobKey(jobId.ToString(), "CopyJobs");
             if (await _scheduler.CheckExists(jobKey))
             {
                 await _scheduler.DeleteJob(jobKey);
-                _logService.LogInformation($"Unscheduled job {jobId}");
+                _logService.LogInformation($"[EXECUTION TRACE] [{nowMs}] [PID:{pid}] [TID:{tid}] Unscheduled job {jobId}");
             }
         }
 
@@ -82,25 +137,42 @@ namespace ScheduledCopyManager.Infrastructure.Scheduler
             await ScheduleJobAsync(job);
         }
 
-        public async Task TriggerJobNowAsync(Guid jobId, bool dryRun = false)
+        public async Task TriggerJobNowAsync(Guid jobId, bool dryRun = false, bool isRecoveryResume = false, ExecutionTriggerSource source = ExecutionTriggerSource.ManualRun, IReadOnlyList<FileItemResult>? retryFiles = null)
         {
+            string nowMs = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+            int pid = Environment.ProcessId;
+            int tid = Environment.CurrentManagedThreadId;
+
             if (_scheduler == null) await StartAsync();
 
             var dataMap = new JobDataMap
             {
                 { "JobId", jobId.ToString() },
                 { "DryRun", dryRun },
-                { "ManualTrigger", true }
+                { "ManualTrigger", source == ExecutionTriggerSource.ManualRun },
+                { "IsRecoveryResume", isRecoveryResume || source == ExecutionTriggerSource.RecoveryResume },
+                { "TriggerSource", source.ToString() }
             };
+
+            if (retryFiles != null && retryFiles.Count > 0)
+            {
+                try
+                {
+                    string json = System.Text.Json.JsonSerializer.Serialize(retryFiles);
+                    dataMap.Put("HistoryRetryFilesJson", json);
+                }
+                catch { }
+            }
 
             var jobKey = new JobKey(jobId.ToString(), "CopyJobs");
             if (await _scheduler!.CheckExists(jobKey))
             {
+                _logService.LogInformation($"[EXECUTION TRACE] [{nowMs}] [PID:{pid}] [TID:{tid}] JobScheduler.TriggerJobNowAsync (Existing JobKey): JobId={jobId}, Source={source}, DryRun={dryRun}, RetryFilesCount={retryFiles?.Count ?? 0}");
                 await _scheduler.TriggerJob(jobKey, dataMap);
             }
             else
             {
-                // Temporary ad-hoc execution
+                _logService.LogInformation($"[EXECUTION TRACE] [{nowMs}] [PID:{pid}] [TID:{tid}] JobScheduler.TriggerJobNowAsync (Ad-Hoc Temp Job): JobId={jobId}, Source={source}, DryRun={dryRun}, RetryFilesCount={retryFiles?.Count ?? 0}");
                 var tempJob = JobBuilder.Create<QuartzCopyJob>()
                     .WithIdentity($"Temp_{jobId}_{Guid.NewGuid()}", "TempJobs")
                     .UsingJobData(dataMap)
@@ -112,8 +184,6 @@ namespace ScheduledCopyManager.Infrastructure.Scheduler
 
                 await _scheduler.ScheduleJob(tempJob, tempTrigger);
             }
-
-            _logService.LogInformation($"Triggered immediate execution for job {jobId} (DryRun: {dryRun})");
         }
 
         public async Task<DateTime?> GetNextExecutionTimeAsync(Job job)
@@ -139,10 +209,6 @@ namespace ScheduledCopyManager.Infrastructure.Scheduler
             if (job.Schedule.StartDate.HasValue)
             {
                 triggerBuilder.StartAt(job.Schedule.StartDate.Value.ToUniversalTime());
-            }
-            else
-            {
-                triggerBuilder.StartNow();
             }
 
             if (job.Schedule.EndDate.HasValue)

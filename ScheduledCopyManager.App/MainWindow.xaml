@@ -33,27 +33,31 @@
 
                 <!-- Nav Links -->
                 <StackPanel Grid.Row="2" Margin="10,0">
-                    <Button Content="📊  Özet Panosu" Command="{Binding NavigateToDashboardCommand}" 
+                    <Button Content="{DynamicResource Str_Nav_Dashboard}" Command="{Binding NavigateToDashboardCommand}" 
                             HorizontalContentAlignment="Left" Padding="15,12" FontSize="13" FontWeight="SemiBold"
                             Foreground="White" Background="Transparent" BorderThickness="0" Margin="0,2" Cursor="Hand"/>
 
-                    <Button Content="📋  Kopyalama Görevleri" Command="{Binding NavigateToJobsCommand}" 
+                    <Button Content="{DynamicResource Str_Nav_Jobs}" Command="{Binding NavigateToJobsCommand}" 
                             HorizontalContentAlignment="Left" Padding="15,12" FontSize="13" FontWeight="SemiBold"
                             Foreground="White" Background="Transparent" BorderThickness="0" Margin="0,2" Cursor="Hand"/>
 
-                    <Button Content="📜  Kopyalama Geçmişi" Command="{Binding NavigateToHistoryCommand}" 
+                    <Button Content="{DynamicResource Str_Nav_History}" Command="{Binding NavigateToHistoryCommand}" 
                             HorizontalContentAlignment="Left" Padding="15,12" FontSize="13" FontWeight="SemiBold"
                             Foreground="White" Background="Transparent" BorderThickness="0" Margin="0,2" Cursor="Hand"/>
 
-                    <Button Content="📝  Günlükler (Logs)" Command="{Binding NavigateToLogsCommand}" 
+                    <Button Content="{DynamicResource Str_Nav_Logs}" Command="{Binding NavigateToLogsCommand}" 
                             HorizontalContentAlignment="Left" Padding="15,12" FontSize="13" FontWeight="SemiBold"
                             Foreground="White" Background="Transparent" BorderThickness="0" Margin="0,2" Cursor="Hand"/>
 
-                    <Button Content="⚙️  Ayarlar" Command="{Binding NavigateToSettingsCommand}" 
+                    <Button Content="{DynamicResource Str_Nav_Settings}" Command="{Binding NavigateToSettingsCommand}" 
                             HorizontalContentAlignment="Left" Padding="15,12" FontSize="13" FontWeight="SemiBold"
                             Foreground="White" Background="Transparent" BorderThickness="0" Margin="0,2" Cursor="Hand"/>
 
-                    <Button Content="ℹ️  Hakkında" Command="{Binding NavigateToAboutCommand}" 
+                    <Button Content="{DynamicResource Str_Nav_Tools}" Command="{Binding NavigateToToolsCommand}" 
+                            HorizontalContentAlignment="Left" Padding="15,12" FontSize="13" FontWeight="SemiBold"
+                            Foreground="White" Background="Transparent" BorderThickness="0" Margin="0,2" Cursor="Hand"/>
+
+                    <Button Content="{DynamicResource Str_Nav_About}" Command="{Binding NavigateToAboutCommand}" 
                             HorizontalContentAlignment="Left" Padding="15,12" FontSize="13" FontWeight="SemiBold"
                             Foreground="White" Background="Transparent" BorderThickness="0" Margin="0,2" Cursor="Hand"/>
                 </StackPanel>

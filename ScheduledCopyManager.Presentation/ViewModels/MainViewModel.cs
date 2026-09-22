@@ -20,6 +20,7 @@ namespace ScheduledCopyManager.Presentation.ViewModels
         public LogsViewModel LogsVM { get; }
         public SettingsViewModel SettingsVM { get; }
         public AboutViewModel AboutVM { get; }
+        public ToolsViewModel ToolsVM { get; }
         public WelcomeViewModel WelcomeVM { get; }
 
         [ObservableProperty]
@@ -41,6 +42,7 @@ namespace ScheduledCopyManager.Presentation.ViewModels
             LogsViewModel logsVM,
             SettingsViewModel settingsVM,
             AboutViewModel aboutVM,
+            ToolsViewModel toolsVM,
             WelcomeViewModel welcomeVM,
             IJobRepository jobRepository,
             ISettingsRepository settingsRepository,
@@ -53,6 +55,7 @@ namespace ScheduledCopyManager.Presentation.ViewModels
             LogsVM = logsVM;
             SettingsVM = settingsVM;
             AboutVM = aboutVM;
+            ToolsVM = toolsVM;
             WelcomeVM = welcomeVM;
 
             _jobRepository = jobRepository;
@@ -67,9 +70,18 @@ namespace ScheduledCopyManager.Presentation.ViewModels
 
         public async Task InitializeAsync()
         {
+            string nowMs = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+            int pid = Environment.ProcessId;
+            int tid = Environment.CurrentManagedThreadId;
+
+            _logService.LogInformation($"[EXECUTION TRACE] [{nowMs}] [PID:{pid}] [TID:{tid}] MainViewModel.InitializeAsync STARTING");
+
             try
             {
-                // Start scheduler
+                // Scan checkpoints & discover recoverable jobs first
+                await JobsVM.InitializeAsync();
+
+                // Start scheduler safely after recovery state is populated
                 await _jobScheduler.StartAsync();
 
                 // Load jobs into scheduler
@@ -89,11 +101,11 @@ namespace ScheduledCopyManager.Presentation.ViewModels
                 }
 
                 await DashboardVM.InitializeAsync();
-                await JobsVM.InitializeAsync();
+                _logService.LogInformation($"[EXECUTION TRACE] [{nowMs}] [PID:{pid}] [TID:{tid}] MainViewModel.InitializeAsync COMPLETED");
             }
             catch (Exception ex)
             {
-                _logService.LogError("MainViewModel başlatılırken hata", ex);
+                _logService.LogError($"[EXECUTION TRACE] [{nowMs}] [PID:{pid}] [TID:{tid}] MainViewModel.InitializeAsync ERROR: {ex.Message}", ex);
             }
         }
 
@@ -135,6 +147,14 @@ namespace ScheduledCopyManager.Presentation.ViewModels
             CurrentViewModel = SettingsVM;
             ActiveViewTitle = "Ayarlar";
             await SettingsVM.InitializeAsync();
+        }
+
+        [RelayCommand]
+        public void NavigateToTools()
+        {
+            CurrentViewModel = ToolsVM;
+            ActiveViewTitle = "Araçlar";
+            ToolsVM.Initialize();
         }
 
         [RelayCommand]

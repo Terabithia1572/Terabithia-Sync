@@ -20,7 +20,7 @@
         </Grid.RowDefinitions>
 
         <!-- Header -->
-        <TextBlock Grid.Row="0" Text="Uygulama Ayarları" FontSize="24" FontWeight="Bold" Foreground="#2C3E50"/>
+        <TextBlock Grid.Row="0" Text="{DynamicResource Settings_Title}" FontSize="24" FontWeight="Bold" Foreground="#2C3E50"/>
 
         <!-- Settings Form Area -->
         <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
@@ -28,11 +28,25 @@
                 <!-- Startup & Tray -->
                 <GroupBox Header="Sistem ve Tepsi (Tray) Ayarları" Margin="0,0,0,15" Padding="12">
                     <StackPanel TextElement.FontWeight="Normal">
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="220"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{DynamicResource Language}" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                            <ComboBox Grid.Column="1" ItemsSource="{Binding AvailableLanguages}" SelectedItem="{Binding SelectedLanguage}" Padding="6"/>
+                        </Grid>
                         <CheckBox IsChecked="{Binding StartWithWindows}" Content="Windows açılışında otomatik çalıştır (Başlangıç)" Margin="0,5,0,8"/>
                         <CheckBox IsChecked="{Binding StartMinimized}" Content="Uygulamayı simge durumunda (Tray) başlat" Margin="0,0,0,8"/>
                         <CheckBox IsChecked="{Binding EnableTrayIcon}" Content="Sistem tepsi (Tray) simgesini aktif et" Margin="0,0,0,8"/>
                         <CheckBox IsChecked="{Binding CloseToTray}" Content="Pencere kapatıldığında uygulamayı kapatma, tepsiye küçült" Margin="0,0,0,8"/>
-                        <CheckBox IsChecked="{Binding EnableNotifications}" Content="Windows bildirimlerini göster (Başarı / Hata)" Margin="0,0,0,5"/>
+                        <CheckBox IsChecked="{Binding EnableNotifications}" Content="Windows bildirimlerini göster (Başarı / Hata)" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                        <StackPanel Margin="20,4,0,5" Visibility="{Binding EnableNotifications, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <CheckBox IsChecked="{Binding NotifyOnSuccess}" Content="Görev başarıyla tamamlandığında bildir" Margin="0,2,0,4"/>
+                            <CheckBox IsChecked="{Binding NotifyOnFailure}" Content="Görev başarısız olduğunda bildir" Margin="0,2,0,4"/>
+                            <CheckBox IsChecked="{Binding NotifyOnDestinationUnavailable}" Content="Hedef / USB sürücüsü erişilemez olduğunda bildir" Margin="0,2,0,4"/>
+                            <CheckBox IsChecked="{Binding NotifyOnRecoveryWaiting}" Content="Kurtarma kullanıcı işlemi beklediğinde bildir" Margin="0,2,0,4"/>
+                        </StackPanel>
                     </StackPanel>
                 </GroupBox>
 
@@ -83,6 +97,21 @@
                     </StackPanel>
                 </GroupBox>
 
+                <!-- Diagnostic Copy Buffer Settings -->
+                <GroupBox Header="Gelişmiş / Teşhis" Margin="0,0,0,15" Padding="12">
+                    <StackPanel TextElement.FontWeight="Normal">
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="220"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Uygulama Kopyalama Tamponu (Copy Buffer):" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                            <ComboBox Grid.Column="1" ItemsSource="{Binding CopyBufferOptions}" SelectedItem="{Binding SelectedCopyBufferOption}" DisplayMemberPath="DisplayName" Padding="6"/>
+                        </Grid>
+                        <TextBlock Text="* Not: İç FileStream tampon boyutu 4096 Bayt, FileOptions=Asynchronous|SequentialScan olarak çalışır." Foreground="#64748B" FontSize="11" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </GroupBox>
+
                 <!-- Data & Paths -->
                 <GroupBox Header="Veri ve Konum Bilgileri" Margin="0,0,0,15" Padding="12">
                     <StackPanel TextElement.FontWeight="Normal">
@@ -102,7 +131,7 @@
 
         <!-- Save Button -->
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
-            <Button Content="💾 Ayarları Kaydet" Command="{Binding SaveCommand}" Padding="18,10" Style="{StaticResource ModernSuccessButtonStyle}"/>
+            <Button Content="{DynamicResource Settings_Save}" Command="{Binding SaveCommand}" Padding="18,10" Style="{StaticResource ModernSuccessButtonStyle}"/>
         </StackPanel>
     </Grid>
 </UserControl>

@@ -1,0 +1,88 @@
+<Window x:Class="ScheduledCopyManager.Presentation.Views.RecoveryDetailsView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Kurtarma Ayrıntıları - Terabithia Sync" Height="450" Width="550"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
+        Background="#F8FAFC">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="15"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="15"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <StackPanel Grid.Row="0">
+            <TextBlock Text="⚠️ Tamamlanmamış Kopyalama Ayrıntıları" FontSize="18" FontWeight="Bold" Foreground="#1E293B"/>
+            <TextBlock Text="Kesintiye uğrayan görevin kayıtlı son durumu ve kurtarma verileri" FontSize="12" Foreground="#64748B" Margin="0,3,0,0"/>
+        </StackPanel>
+
+        <!-- Details Card -->
+        <Border Grid.Row="2" Background="White" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="8" Padding="20">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Job Name & Status -->
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="{Binding JobName}" FontSize="16" FontWeight="Bold" Foreground="#0F172A"/>
+                    <Border Grid.Column="1" Padding="8,4" CornerRadius="4" Background="{Binding LastStateColor}">
+                        <TextBlock Text="{Binding LastStateText}" Foreground="White" FontSize="11" FontWeight="Bold"/>
+                    </Border>
+                </Grid>
+
+                <!-- Destination Path -->
+                <StackPanel Grid.Row="2">
+                    <TextBlock Text="Hedef Klasör:" FontSize="11" Foreground="#64748B" FontWeight="SemiBold"/>
+                    <TextBlock Text="{Binding DestinationPath}" FontSize="13" Foreground="#1E293B" FontWeight="Medium" Margin="0,2,0,0"/>
+                </StackPanel>
+
+                <!-- Interruption Reason -->
+                <StackPanel Grid.Row="4">
+                    <TextBlock Text="Kesinti / Durum Nedeni:" FontSize="11" Foreground="#64748B" FontWeight="SemiBold"/>
+                    <TextBlock Text="{Binding InterruptionReason}" FontSize="13" Foreground="#DC2626" FontWeight="Medium" Margin="0,2,0,0"/>
+                </StackPanel>
+
+                <!-- File Summary & Bytes -->
+                <Grid Grid.Row="6">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Dosya İlerlemesi:" FontSize="11" Foreground="#64748B" FontWeight="SemiBold"/>
+                        <TextBlock Text="{Binding FilesSummary}" FontSize="12" Foreground="#0F172A" FontWeight="Bold" Margin="0,2,0,0"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Text="Aktarılan Veri:" FontSize="11" Foreground="#64748B" FontWeight="SemiBold"/>
+                        <TextBlock Text="{Binding BytesSummary}" FontSize="12" Foreground="#2563EB" FontWeight="Bold" Margin="0,2,0,0"/>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Last Update Timestamp -->
+                <StackPanel Grid.Row="8">
+                    <TextBlock Text="Son Güncelleme Zamanı:" FontSize="11" Foreground="#64748B" FontWeight="SemiBold"/>
+                    <TextBlock Text="{Binding LastUpdatedText}" FontSize="12" Foreground="#475569" Margin="0,2,0,0"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Close Button -->
+        <Button Grid.Row="4" Content="Kapat" Command="{Binding CloseCommand}" HorizontalAlignment="Right" Padding="20,8" Style="{StaticResource ModernPrimaryButtonStyle}"/>
+    </Grid>
+</Window>

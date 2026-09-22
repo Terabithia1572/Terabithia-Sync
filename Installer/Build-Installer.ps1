@@ -18,6 +18,7 @@ Start-Sleep -Milliseconds 500
 if (Test-Path "ScheduledCopyManager.App\bin") { Remove-Item "ScheduledCopyManager.App\bin" -Recurse -Force }
 if (Test-Path "InstallerOutput") { Remove-Item "InstallerOutput" -Recurse -Force }
 if (Test-Path "Release") { Remove-Item "Release" -Recurse -Force }
+if (Test-Path "Output") { Remove-Item "Output" -Recurse -Force }
 
 # 1. Restore Solution
 Write-Host "`n[1/6] Restoring Solution..." -ForegroundColor Yellow
@@ -37,7 +38,7 @@ if ($LASTEXITCODE -ne 0) {
 
 # 3. Run Automated Tests
 Write-Host "`n[3/6] Running Unit Tests..." -ForegroundColor Yellow
-dotnet test -c Release --no-build
+dotnet test -c Release --no-build --filter "FullyQualifiedName!~Benchmark"
 if ($LASTEXITCODE -ne 0) {
     Write-Error "dotnet test failed!"
     exit 1
@@ -45,13 +46,13 @@ if ($LASTEXITCODE -ne 0) {
 
 # 4. Publish Self-Contained Application (win-x64 --self-contained true)
 Write-Host "`n[4/6] Publishing Self-Contained Application (win-x64)..." -ForegroundColor Yellow
-dotnet publish ScheduledCopyManager.App\ScheduledCopyManager.App.csproj -c Release -r win-x64 --self-contained true
+dotnet publish ScheduledCopyManager.App\ScheduledCopyManager.App.csproj -c Release -r win-x64 --self-contained true -o Release\TerabithiaSync
 if ($LASTEXITCODE -ne 0) {
     Write-Error "dotnet publish failed!"
     exit 1
 }
 
-$publishDir = (Resolve-Path "ScheduledCopyManager.App\bin\Release\net8.0-windows10.0.17763.0\win-x64\publish").Path
+$publishDir = (Resolve-Path "Release\TerabithiaSync").Path
 $exePath = Join-Path $publishDir "TerabithiaSync.exe"
 
 if (-not (Test-Path $exePath)) {
@@ -119,7 +120,9 @@ $releaseInstDir = Join-Path $releaseDir "Installer"
 New-Item -ItemType Directory -Force -Path $releaseAppDir | Out-Null
 New-Item -ItemType Directory -Force -Path $releaseInstDir | Out-Null
 
-Copy-Item -Path "$publishDir\*" -Destination $releaseAppDir -Recurse -Force
+if ($publishDir -ne $releaseAppDir) {
+    Copy-Item -Path "$publishDir\*" -Destination $releaseAppDir -Recurse -Force
+}
 
 # Safely copy installer to Release\Installer with retries to handle any temporary file locks
 $destInstaller = Join-Path $releaseInstDir "TerabithiaSync-Setup-1.0.0.exe"

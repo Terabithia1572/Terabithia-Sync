@@ -16,6 +16,7 @@ namespace ScheduledCopyManager.Presentation.ViewModels
         private readonly IHistoryRepository _historyRepository;
         private readonly IJobScheduler _jobScheduler;
         private readonly ILogService _logService;
+        private readonly Services.IDialogService? _dialogService;
 
         [ObservableProperty] private int _totalJobs;
         [ObservableProperty] private int _enabledJobs;
@@ -25,6 +26,7 @@ namespace ScheduledCopyManager.Presentation.ViewModels
         [ObservableProperty] private string _nextScheduledRunText = "Planlanmış görev yok";
         [ObservableProperty] private string _lastExecutionText = "Henüz çalıştırılmadı";
         [ObservableProperty] private string _systemStatusText = "Zamanlayıcı Aktif ve Çalışıyor";
+        [ObservableProperty] private HistoryEntry? _selectedHistoryEntry;
 
         public ObservableCollection<HistoryEntry> RecentHistory { get; } = new();
 
@@ -32,12 +34,14 @@ namespace ScheduledCopyManager.Presentation.ViewModels
             IJobRepository jobRepository,
             IHistoryRepository historyRepository,
             IJobScheduler jobScheduler,
-            ILogService logService)
+            ILogService logService,
+            Services.IDialogService? dialogService = null)
         {
             _jobRepository = jobRepository;
             _historyRepository = historyRepository;
             _jobScheduler = jobScheduler;
             _logService = logService;
+            _dialogService = dialogService;
         }
 
         public async Task InitializeAsync()
@@ -92,6 +96,15 @@ namespace ScheduledCopyManager.Presentation.ViewModels
             {
                 _logService.LogError("Özet panosu verileri güncellenirken hata oluştu", ex);
             }
+        }
+
+        [RelayCommand]
+        public async Task ShowHistoryDetailsAsync(HistoryEntry? entry)
+        {
+            var target = entry ?? SelectedHistoryEntry;
+            if (target == null || _dialogService == null) return;
+            await _dialogService.ShowHistoryDetailsAsync(target);
+            await RefreshDataAsync();
         }
     }
 }

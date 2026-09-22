@@ -26,18 +26,10 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Border Grid.Column="0" Width="72" Height="72" CornerRadius="16" VerticalAlignment="Center" Margin="0,0,20,0">
-                            <Border.Background>
-                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                    <GradientStop Color="#0F172A" Offset="0"/>
-                                    <GradientStop Color="#1E293B" Offset="1"/>
-                                </LinearGradientBrush>
-                            </Border.Background>
-                            <Grid>
-                                <TextBlock Text="📁" FontSize="32" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="-6,-6,0,0"/>
-                                <TextBlock Text="🔄" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="14,14,0,0"/>
-                            </Grid>
-                        </Border>
+                        <Image Grid.Column="0" Width="72" Height="72" VerticalAlignment="Center" Margin="0,0,20,0"
+                               Source="pack://application:,,,/ScheduledCopyManager.Presentation;component/Resources/app_icon.ico"
+                               RenderOptions.BitmapScalingMode="HighQuality"
+                               UseLayoutRounding="True" />
                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
                             <TextBlock Text="{Binding AppName}" FontSize="24" FontWeight="Bold" Foreground="#1E293B"/>
                             <TextBlock Text="{Binding Description}" FontSize="14" Foreground="#3B82F6" FontWeight="SemiBold" Margin="0,3,0,0"/>

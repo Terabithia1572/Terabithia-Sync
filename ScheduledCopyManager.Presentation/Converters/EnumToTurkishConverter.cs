@@ -70,6 +70,28 @@ namespace ScheduledCopyManager.Presentation.Converters
                 };
             }
 
+            if (value is VerificationMode verificationMode)
+            {
+                return verificationMode switch
+                {
+                    VerificationMode.None => "Doğrulama Yok",
+                    VerificationMode.SizeAndTimestamp => "Boyut ve Zaman Damgası",
+                    VerificationMode.SHA256 => "SHA-256",
+                    _ => verificationMode.ToString()
+                };
+            }
+
+            if (value is FailureBehavior failureBehavior)
+            {
+                return failureBehavior switch
+                {
+                    FailureBehavior.ContinueWithRemaining => "Diğer Dosyalarla Devam Et",
+                    FailureBehavior.PauseJob => "Görevi Duraklat",
+                    FailureBehavior.StopJob => "Görevi Durdur",
+                    _ => failureBehavior.ToString()
+                };
+            }
+
             return value.ToString() ?? string.Empty;
         }
 

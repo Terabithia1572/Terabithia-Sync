@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
+using ScheduledCopyManager.Domain.Models;
 
 namespace ScheduledCopyManager.Presentation.ViewModels
 {
@@ -8,7 +9,7 @@ namespace ScheduledCopyManager.Presentation.ViewModels
         public string AppName => "Terabithia Sync";
         public string Description => "Zamanlı Dosya ve Klasör Kopyalama Yöneticisi";
         public string Publisher => "Yunus İNAN";
-        public string Version => "1.0.0";
+        public string Version => BuildInfo.BuildIdentifier;
         public string Copyright => "© Yunus İNAN - Tüm Hakları Saklıdır.";
         public string Platform => "Windows 10 / Windows 11 (64-bit)";
         public string Runtime => "Bağımsız (Self-contained .NET 8)";

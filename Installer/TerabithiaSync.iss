@@ -8,7 +8,7 @@
 #define MyAppExeName "TerabithiaSync.exe"
 #define MyAppIcon "app_icon.ico"
 #define MyLicenseFile "..\LICENSE.txt"
-#define SourcePublishDir "..\ScheduledCopyManager.App\bin\Release\net8.0-windows10.0.17763.0\win-x64\publish"
+#define SourcePublishDir "..\Release\TerabithiaSync"
 
 [Setup]
 AppId={{D8F9A4E2-5678-4321-9ABC-FEDCBA987654}

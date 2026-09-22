@@ -8,6 +8,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/ScheduledCopyManager.Presentation;component/Styles/ButtonStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/ScheduledCopyManager.Presentation;component/Resources/Strings.tr-TR.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <!-- Converters -->
@@ -40,6 +41,10 @@
 
             <DataTemplate DataType="{x:Type vm:AboutViewModel}">
                 <views:AboutView />
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:ToolsViewModel}">
+                <views:ToolsView />
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type vm:WelcomeViewModel}">

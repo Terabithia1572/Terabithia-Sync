@@ -1,23 +1,23 @@
 ## Visual Studio / .NET Core / WPF .gitignore
 
 # Build & Publish outputs
+**/bin/
+**/obj/
 [Bb]in/
 [Oo]bj/
-[Ll]og/
-[Ll]ogs/
-[R r]elease/
-!Release/
-!Release/Installer/
-!Release/Installer/**
+Release/
 InstallerOutput/
 TestResults/
 publish/
+[Ll]og/
+[Ll]ogs/
 
 # Scratch & Temporary Tool Files
 scratch/
 *.tmp
 *.log
 *.bak
+*.pdb
 
 # User-specific files
 *.user
@@ -47,8 +47,10 @@ _ReSharper*/
 *.nuget.targets
 project.lock.json
 
-# Local App settings / Credentials
+# Local App settings / Credentials & Local Runtime Data
 *.env
 *.env.local
 *.pfx
 *.snk
+checkpoints/
+settings.json

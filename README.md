@@ -1,412 +1,218 @@
 # Terabithia Sync
 
-**Zamanlı Dosya ve Klasör Kopyalama Yöneticisi**
+**Windows için Zamanlanmış, Güvenli ve Kesintiye Dayanıklı Dosya/Klasör Kopyalama ve Yedekleme Yöneticisi**
 
-[![Build & Test](https://github.com/YunusInan/Terabithia-Sync/actions/workflows/build.yml/badge.svg)](https://github.com/YunusInan/Terabithia-Sync/actions/workflows/build.yml)
+[![Build & Test](https://github.com/Terabithia1572/Terabithia-Sync/actions/workflows/build.yml/badge.svg)](https://github.com/Terabithia1572/Terabithia-Sync/actions/workflows/build.yml)
 [![Framework](https://img.shields.io/badge/.NET-8.0--windows-512BD4?logo=dotnet)](https://dotnet.microsoft.com/)
 [![Platform](https://img.shields.io/badge/Platform-Windows%2010%2F11%20x64-0078D6?logo=windows)](https://www.microsoft.com/windows)
 [![Language](https://img.shields.io/badge/Language-C%23-239120?logo=csharp)](https://docs.microsoft.com/en-us/dotnet/csharp/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Release](https://img.shields.io/badge/Release-v1.0.0-green.svg)](https://github.com/YunusInan/Terabithia-Sync/releases)
+[![Release](https://img.shields.io/badge/Release-v1.0.0--phase3--v14.2-green.svg)](https://github.com/Terabithia1572/Terabithia-Sync/releases)
 
 ---
 
-## 1. Proje Hakkında
+## Proje Hakkında
 
-**Terabithia Sync**, Windows işletim sistemleri için geliştirilmiş, yüksek performanslı, güvenilir ve modüler bir zamanlı dosya/klasör kopyalama ve senkronizasyon yöneticisidir.
+**Terabithia Sync**, Windows işletim sistemleri için C# ve .NET 8 ile geliştirilmiş; zamanlanmış, artımlı ve kesintiye dayanıklı dosya ve klasör kopyalama yöneticisidir.
 
-Günümüz bilgi teknolojileri altyapılarında kritik verilerin düzenli olarak yedeklenmesi ve farklı disk alanları veya sunucular arasında senkronize edilmesi yaşamsal bir gereksinimdir. **Terabithia Sync**, karmaşık komut satırı araçları veya güvenilmez yedekleme yazılımları yerine; modern WPF arayüzü, gelişmiş görev zamanlayıcısı, otomatik USB ve ağ sürücüsü algılama mekanizmaları ile eksiksiz bir çözüm sunar.
-
-### Çözüm Sunulan Problemler ve Kullanım Alanları:
-- **Otomatik ve Zamanlanmış Yedeklemeler:** Günlük, haftalık, aylık veya özel cron zamanlamalarıyla personel müdahalesine gerek kalmadan verilerin yedeklenmesi.
-- **Sunucu ve İstemci Dosya Senkronizasyonu:** Ağ paylaşımları (UNC yolları) ve yerel diskler arasında artımlı veya ayna modunda kesintisiz senkronizasyon.
-- **Taşınabilir USB Sürücü Yedeklemesi:** USB disk bilgisayara takıldığı anda hedefin varlığını otomatik algılayarak bekleyen yedekleme görevlerini başlatma.
-- **Kilitli ve Erişim Engelli Dosya Toleransı:** Başka işlemler tarafından kullanılan (kilitli) dosyalar nedeniyle tüm görevin başarısız olmasını önleme; hatalı dosyaları ayrı izleme ve bağlantı sağlandığında **yalnızca başarısız olanları yeniden deneme** (Resume/Retry) yeteneği.
-- **Veri Kaybı Önleme:** Ayna modu silme izinlerinde açık onay mekanizması ve hedef klasörün kaynak klasörün içine konumlandırılmasını engelleyen dairesel kopyalama doğrulaması.
+Geliştirici: **Yunus İNAN**  
+GitHub: [@Terabithia1572](https://github.com/Terabithia1572)  
+Kararlı Derleme Kimliği (BuildId): `1.0.0-phase3-unified-retry-execution-v14.2`
 
 ---
 
-## 2. Özellikler
+## Özellikler
 
 - ⏰ **Gelişmiş Görev Zamanlama:**
-  - **Günlük (Daily):** Belirlenen saat ve dakikada her gün otomatik çalışma.
-  - **Haftalık (Weekly):** Haftanın seçilen günlerinde zamanlanmış yürütme.
-  - **Aylık (Monthly):** Ayın belirlenen gününde otomatik tetiklenme.
-  - **Tek Seferlik (OneTime):** Belirtilen tarih ve saatte tek seferlik çalışma.
-  - **Özel Cron:** Quartz.NET altyapısıyla gelişmiş cron ifadeleri desteği.
-- 🚀 **Esnek Çalıştırma Seçenekleri:** Zamanlanmış görevlerin yanı sıra istenildiği an **Manuel Çalıştırma** ve önceden sonuçları simüle eden **Ön İzleme (Dry Run)** modu.
-- 🔄 **Üç Farklı Kopyalama Modu:**
-  - **Artımlı (Incremental):** Yalnızca yeni veya değişmiş dosyaları kopyalar.
-  - **Ayna Modu (Mirror):** Kaynağın birebir kopyasını hedefte oluşturur (opsiyonel fazla dosya silme izniyle).
-  - **Yalnızca Doğrula (Verify-Only):** Dosyaları aktarmadan kaynak ve hedef arasındaki farkları raporlar.
-- ⚔️ **Esnek Çakışma Politikaları (Conflict Handling):**
-  - **Atla (Skip):** Hedefte aynı dosya varsa kopyalamayı atlar.
-  - **Üzerine Yaz (Overwrite):** Kaynak dosya ile hedef dosyayı değiştirir.
-  - **Yeniden Adlandır (Rename):** Hedefteki dosyayı bozmadan `dosya (1).ext` biçiminde kaydeder.
-- 🔌 **USB ve Çıkarılabilir Sürücü Algılama:**
-  - Taşınabilir sürücülerin takılmasını/çıkarılmasını anlık izleme.
-  - USB çıkarıldığında kopyalamayı güvenle bekletme, yeniden bağlandığında kalınan yerden **otomatik devam ettirme (Resume)**.
-- 📊 **Gruplanmış ve Hiyerarşik Günlükleme (Grouped Logging):**
-  - Tüm dosya işlemlerini klasör ve görev bazında daraltılabilir/genişletilebilir (`▶` / `▼`) hiyerarşide gösterme.
-  - UI performansını koruyan Sanallaştırılmış (Virtualized) DataGrid yapısı.
-- 🔁 **Başarısız Dosyaları Yeniden Deneme (Granular Resume):**
-  - Görev kısmi başarılı veya başarısız tamamlandığında **tüm görevi baştan çalıştırmadan** yalnızca kilitli/başarısız olan dosyaları yeniden deneme.
-- 🛡️ **Klasör Kök Yapısı Koruması:**
-  - Kaynak olarak seçilen `C:\Yedek\Proje` klasörünün kendisini hedefte `E:\Hedek\Proje` olarak koruyarak kopyalama.
-- 🔔 **Sistem Tepsisi (System Tray) ve Bildirimler:**
-  - Windows başlangıcında sistem tepside sessiz çalışma, canlı durum simgesi ve Windows Toast bildirimleri.
-- 🌐 **%100 Türkçe Kullanıcı Arayüzü ve Hata Çevirileri:**
-  - Kullanıcıya sunulan tüm arayüz metinleri, durum etiketleri ve Windows I/O hata açıklamaları anlaşılır Türkçedir.
+  - Günlük (Daily), Haftalık (Weekly), Aylık (Monthly), Tek Seferlik (OneTime) ve Quartz.NET altyapısıyla özel Cron zamanlamaları.
+  - İstenildiği an tek tıkla **Manuel Çalıştırma**.
+- 🔄 **Esnek Kopyalama Modları:**
+  - **Artımlı Kopyalama (Incremental):** Yalnızca yeni veya değişmiş dosyaları hedefe aktarır.
+  - **Ayna Modu (Mirror):** Kaynağın birebir kopyasını oluşturur (opsiyonel fazla dosya silme korumasıyla).
+  - **Yalnızca Doğrula (Verify-Only):** Kopyalama yapmadan kaynak ve hedef farklarını raporlar.
+- ⚔️ **Çakışma Yönetim Politikaları:** Atla (Skip), Üzerine Yaz (Overwrite), Yeniden Adlandır (Rename).
+- ⚡ **Canlı Aktarım İlerlemesi:** Aktarılan bayt, mevcut dosya adı, anlık transfer hızı, kalan süre (ETA) ve geçen süre takibi.
+- ⏯️ **Esnek İşlem Kontrolleri:** Canlı işlem sırasında Duraklat (Pause), Durdur (Stop), İptal Et (Cancel) kontrolleri.
+- 🛡️ **Kalıcı Kontrol Noktası Kurtarma (Persistent Checkpoints):**
+  - Elektrik veya uygulama kesintilerinde kopyalama durumunu diskte saklama.
+  - Tamamlanmış dosyaları otomatik doğrulayarak tekrar kopyalamama.
+  - Uygulama yeniden başlatıldığında kullanıcıya **Kurtarma Banner'ı (Recovery Banner)** sunma ve manuel "Devam Et" onayıyla kurtarma.
+- 🔌 **Akıllı USB ve Taşınabilir Sürücü Güvenliği:**
+  - Windows Birim Seri Numarası (Volume Serial Identity) ile USB sürücülerini tanıma.
+  - USB takılıp çıkarıldığında otomatik algılama ve canlı oturumda otomatik devam ettirme.
+  - Sürücü harfi değişse bile doğru USB birimini tespit etme, yanlış cihaza yazmayı engelleme.
+  - Sürücü bağlı değilse hedef erişilebilir olana kadar otomatik bekleme.
+  - Görev Düzenleyicide doğrudan USB birimi seçici (USB Target Selector).
+- 📜 **Ayrıntılı İşlem Geçmişi ve Günlükleme:**
+  - Dosya düzeyinde ayrıntılı kopyalama geçmişi.
+  - **Merkezi Yeniden Deneme (Centralized Retry Pipeline):** Başarısız olan veya seçilen dosyaları tek tıkla yeniden deneme.
+  - Aynı görevin eşzamanlı çalışmasını önleyen çifte çalıştırma koruması (Duplicate execution protection).
+- 🔔 **Sistem Entegrasyonları:**
+  - Windows Toast bildirimleri (Başarı/Hata/Kurtarma durumları).
+  - Sistem Tepsisi (System Tray) desteği ve simge durumunda çalıştırma.
+  - Windows başlangıcında otomatik çalışma opsiyonu.
+  - Türkçe ve İngilizce dil (Localization) desteği.
+  - Sistem Teşhis ve Araçlar sayfası (Tools Page).
+
+> [!NOTE]
+> **Kesinti Kurtarma Notu:** Kalıcı kontrol noktaları (Checkpoint) sayesinde tamamlanmış dosyalar tekrar kopyalanmaz. Ancak yarıda kalan büyük tek bir dosya, kurtarma başlatıldığında 0. bayttan itibaren tekrar yazılır (bayt düzeyinde parça devamı sonraki sürümler için planlanmıştır).
 
 ---
 
-## 3. Ekran Görüntüleri
+## Ekran Görüntüleri
 
-### Ana Panel (Dashboard)
-Uygulama genel durum özeti, zamanlanmış görevlerin durumu ve hızlı istatistikler.
-![Ana Panel](docs/screenshots/summary.png)
-
-### Görev Yönetimi (Job Management)
-Tüm zamanlanmış ve manuel kopyalama görevlerinin listelendiği ana yönetim ekranı.
-![Görev Yönetimi](docs/screenshots/Copy_Task.png)
-
-### Görev Düzenleyici ve Kaynak Yönetimi (Job Editor & Source Management)
-Toplu dosya/klasör ekleme, multi-select kaldırma, çakışma politikası ve zamanlama ayarları.
-![Görev Düzenleyici](docs/screenshots/Create_Task.png)
-![Görev Detayları](docs/screenshots/Create_Task_Detail.png)
-
-### Kopyalama Geçmişi ve Detaylı İnceleme (History & Granular Failure Retry)
-Geçmiş çalıştırmalar, klasör bazlı başarı/hata dağılımı ve başarısız dosyaları tek tıkla yeniden deneme.
-![Kopyalama Geçmişi](docs/screenshots/Copy_History.png)
-![Geçmiş Detayı](docs/screenshots/Copy_History_Detail.png)
-
-### Gruplanmış Günlükler (Hierarchical Grouped Logs)
-Arayüzü yormayan hiyerarşik ağaç yapısında detaylı dosya işlem günlükleri.
-![Günlükler](docs/screenshots/Logs.png)
-
-### Ayarlar ve Hakkında (Settings & About)
-Otomatik başlatma, sistem tepsisi tercihleri, lisans ve sürüm bilgileri.
-![Ayarlar](docs/screenshots/Settings.png)
-![Hakkında](docs/screenshots/About.png)
-
-### Kurulum Sihirbazı (Installer)
-Tek tıkla kurulum, Türkçe dil seçimi ve masaüstü/başlat menüsü kısayol entegrasyonu.
-![Kurulum Dili](docs/screenshots/setup_language.png)
-![Kurulum Sihirbazı](docs/screenshots/setup_screen.png)
-![Kurulum İlerlemesi](docs/screenshots/install_screen.png)
-![Kısayollar](docs/screenshots/shortcut.png)
-
----
-
-## 4. Nasıl Çalışır?
-
-Terabithia Sync, katmanlı bir mimari üzerinde olay odaklı (event-driven) ve zamanlayıcı tabanlı olarak çalışır:
-
-```
-[ Kullanıcı Arayüzü (WPF / Presentation) ]
-                  │
-                  ▼
-[ Görev Yöneticisi & Doğrulama (Application / Services) ]
-                  │
-        ┌─────────┴─────────┐
-        ▼                   ▼
-[ Quartz.NET Scheduler ]  [ Manuel Tetikleme ]
-        │                   │
-        └─────────┬─────────┘
-                  ▼
-   [ Kopyalama Motoru (FileCopyService) ]
-                  │
-     ┌────────────┼────────────┐
-     ▼            ▼            ▼
-[Dosya Doğrula] [İşlem Yap] [Ağ/USB Kontrol]
-     │            │            │
-     └────────────┼────────────┘
-                  ▼
-  [ Sonuç Kaydı & Günlükleme (Serilog & SQLite/JSON) ]
-                  │
-                  ▼
-[ Windows Bildirimleri & Sistem Tepsisi Entegrasyonu ]
-```
-
-1. **Görev Tanımlama:** Kullanıcı UI üzerinden kaynak yolları, hedef yolu, zamanlama ve kopyalama modunu belirler. PathValidator yolların geçerliliğini ve dairesel kopyalama riskini doğrular.
-2. **Zamanlama & Tetikleme:** Quartz.NET arka plan servisi zamanı gelen görevi `CopyJobExecution` üzerinden tetikler.
-3. **Kopyalama Yürütmesi:** `FileCopyService` kaynak klasör yapısını analiz eder, hedefteki dosyalarla timestamp ve boyut (opsiyonel SHA-256) karşılaştırması yapar.
-4. **Hata & USB Yönetimi:** Kopyalama esnasında USB çıkarılırsa `UsbDriveService` olayı yakalar ve görevi beklemeye alır. Kilitli dosyalarda kullanıcı dostu Türkçe hata mesajı kaydedilir.
-5. **Geçmiş & Günlük Kaydı:** Yapılan tüm işlemler `HistoryRepository` ve `Serilog` aracılığıyla kalıcı hale getirilir.
+<table>
+<tr>
+<td width="50%">
+<img src="docs/screenshots/dashboard.png" alt="Özet Panosu">
+<br><b>Özet Panosu (Dashboard)</b>
+</td>
+<td width="50%">
+<img src="docs/screenshots/copy-jobs.png" alt="Kopyalama Görevleri">
+<br><b>Kopyalama Görevleri (Copy Jobs)</b>
+</td>
+</tr>
+<tr>
+<td width="50%">
+<img src="docs/screenshots/usb-target-selector.png" alt="Görev Düzenleyici & USB Seçici">
+<br><b>Görev Düzenleyici & USB Hedef Seçici</b>
+</td>
+<td width="50%">
+<img src="docs/screenshots/history.png" alt="Kopyalama Geçmişi">
+<br><b>Kopyalama Geçmişi (Copy History)</b>
+</td>
+</tr>
+<tr>
+<td width="50%">
+<img src="docs/screenshots/history-details.png" alt="Dosya Ayrıntıları">
+<br><b>Dosya Düzeyinde Geçmiş Ayrıntıları</b>
+</td>
+<td width="50%">
+<img src="docs/screenshots/logs.png" alt="Uygulama Günlükleri">
+<br><b>Uygulama Günlükleri (Grouped Logs)</b>
+</td>
+</tr>
+<tr>
+<td width="50%">
+<img src="docs/screenshots/system-logs.png" alt="Sistem Günlükleri">
+<br><b>Sistem Günlükleri (System Logs)</b>
+</td>
+<td width="50%">
+<img src="docs/screenshots/tools.png" alt="Araçlar & USB Teşhis">
+<br><b>Araçlar & USB Sürücü Teşhisi (Tools)</b>
+</td>
+</tr>
+<tr>
+<td width="50%">
+<img src="docs/screenshots/settings.png" alt="Uygulama Ayarları">
+<br><b>Uygulama Ayarları (Settings)</b>
+</td>
+<td width="50%">
+<img src="docs/screenshots/about.png" alt="Hakkında">
+<br><b>Hakkında (About)</b>
+</td>
+</tr>
+</table>
 
 ---
 
-## 5. Kopyalama Modları
+## Mimari
 
-### 🔹 Artımlı Kopyalama (Incremental)
-- **Tanım:** Kaynak klasördeki yalnızca yeni oluşturulmuş veya son değiştirilme tarihi/boyutu değişmiş dosyaları hedefe aktarır.
-- **Hedef Koruma:** Hedef klasörde kaynakta bulunmayan dosyalar varsa bunlara **dokunmaz ve silmez**.
-- **Kullanım Amacı:** Günlük rutin yedeklemeler için en hızlı ve güvenli moddur.
-
-### 🔹 Ayna Modu (Mirror)
-- **Tanım:** Kaynak klasörün birebir aynısını hedef konumda oluşturur.
-- **Silme İzni:** Görev ayarlarında *"Ayna Modu Silme İzni"* açıkça etkinleştirilirse, hedefte olup kaynakta artık bulunmayan fazla dosyalar hedeften kaldırılır.
-- **Güvenlik Uyarısı:** Veri kaybını önlemek için silme izni etkinleştirilirken kullanıcıdan açık onay alınır. Kaynak klasördeki dosyalar ASLA silinmez.
-
-### 🔹 Yalnızca Doğrula (Verify-Only)
-- **Tanım:** Gerçek bir dosya kopyalama veya silme işlemi yapmaz.
-- **Raporlama:** Kaynak ve hedef arasındaki dosya varlığı, boyut ve tarih farklarını tarar ve rapor halinde sunar.
-
----
-
-## 6. Çakışma Politika Davranışları
-
-Hedef konumda aynı isimde bir dosya zaten mevcutsa uygulamanın izleyeceği strateji:
-
-- **Atla (Skip):** Hedefteki mevcut dosyayı korur, kopyalama adımını atlar.
-- **Üzerine Yaz (Overwrite):** Hedefteki dosyayı yeni kaynak dosya içeriğiyle değiştirir.
-- **Yeniden Adlandır (Rename):** Hedefteki dosyayı silmeden/değiştirmeden yeni dosyayı `dosya_adı (1).ext` formatında kaydeder.
-
----
-
-## 7. USB ve Taşınabilir Sürücü Desteği
-
-- **Otomatik Algılama:** Uygulama Windows `WM_DEVICECHANGE` sürücü olaylarını canlı olarak dinler.
-- **USB Hedef Seçeneği:** Görev düzenleyicide *"Hedef bir USB Taşınabilir Sürücüdür"* seçilebilir.
-- **Bağlantı Kesilmesi (Disconnect):** Kopyalama sırasında USB bellek çıkarılırsa görev iptal edilmez. İşlem `"USB sürücüsü çıkarıldı. Kopyalama bekletildi."` durumuna geçer.
-- **Otomatik Devam Etme (Resume):** USB bellek tekrar takıldığında uygulama hedef sürücünün erişilebilir olduğunu doğrular ve kaldığı dosyadan **otomatik olarak kopyalamaya devam eder**.
-
----
-
-## 8. Hata Yönetimi ve Türkçe Mesajlar
-
-Windows işletim sisteminde dosya kopyalama sırasında oluşabilecek tüm teknik hatalar yakalanır ve kullanıcıya anlaşılır Türkçe terimlerle sunulur:
-
-| Windows Hata Kodu / İstisna | Kullanıcıya Gösterilen Türkçe Mesaj |
-| :--- | :--- |
-| `IOException` (Sharing Violation / 0x80070020) | *"Dosya başka bir program veya kullanıcı tarafından kullanılıyor."* |
-| `UnauthorizedAccessException` (0x80070005) | *"Dosyaya erişim izni bulunmuyor (Erişim reddedildi)."* |
-| `FileNotFoundException` / `DirectoryNotFoundException` | *"Kaynak dosya veya klasör yolu bulunamadı."* |
-| `PathTooLongException` | *"Dosya yolu Windows karakter sınırını aşıyor."* |
-| `DriveNotFoundException` | *"Hedef sürücüye ulaşılamıyor veya sürücü bağlı değil."* |
-
----
-
-## 9. Günlükler (Logs) ve Kopyalama Geçmişi (History)
-
-Uygulama iki seviyeli izleme mekanizmasına sahiptir:
-
-1. **Kopyalama Geçmişi (History):**
-   - Her görevin çalışma zamanını, kopyalanan/atlanan/hatalı dosya sayılarını ve aktarılan toplam veri miktarını saklar.
-   - Kısmi başarılı veya başarısız biten görevlerde **"Başarısızları Yeniden Dene"** butonunu sunar.
-
-2. **Uygulama Günlükleri (Logs):**
-   - Serilog altyapısı ile `%LOCALAPPDATA%\Terabithia Sync\Logs` klasörüne yazılır.
-   - UI üzerinde ağaç hiyerarşisinde gruplanmış olarak sunulur.
-
----
-
-## 10. Kullanılan Teknolojiler
-
-- **Programlama Dili:** C# 12
-- **Çalışma Zamanı (Runtime):** .NET 8.0 (Windows Desktop)
-- **Mimarisi & UI:** WPF (Windows Presentation Foundation), XAML, MVVM Pattern
-- **Bağımlılık Enjeksiyonu:** `Microsoft.Extensions.DependencyInjection`
-- **Görev Zamanlayıcı:** `Quartz.NET 3.8+`
-- **Loglama Altyapısı:** `Serilog`, `Serilog.Sinks.File`
-- **Veri Serileştirme:** `System.Text.Json`
-- **Test Framework:** `xUnit`, `Moq`
-- **Paketleyici / Kurulum:** Inno Setup Compiler 6.x
-
----
-
-## 11. Proje Mimarisi
-
-Çözüm Clean Architecture ilkelerine uygun olarak 5 ana projeden oluşur:
+Proje, Clean Architecture ve MVVM desenine uygun 5 katmandan oluşmaktadır:
 
 ```
 ScheduledCopyManager.slnx
-├── ScheduledCopyManager.Domain/         -> Temel iş kuralları, veri modelleri ve arabirimler (Interfaces)
-├── ScheduledCopyManager.Infrastructure/ -> Kopyalama motoru, Quartz zamanlayıcı, USB servisleri ve depolama
-├── ScheduledCopyManager.Presentation/   -> MVVM ViewModels, UI komutları ve diyalog servisleri
-├── ScheduledCopyManager.App/            -> WPF XAML görünümleri, WPF konfigürasyonu ve giriş noktası (App.xaml)
-└── ScheduledCopyManager.Tests/          -> xUnit birim testleri (Unit Tests)
+├── ScheduledCopyManager.App/          -> WPF Kullanıcı Arayüzü, Uygulama Başlatıcı (Bootstrapper)
+├── ScheduledCopyManager.Domain/       -> Temel veri modelleri, iş kuralları ve arabirimler
+├── ScheduledCopyManager.Infrastructure/ -> Kopyalama motoru, Quartz zamanlayıcı, USB servisleri ve Serilog
+├── ScheduledCopyManager.Presentation/ -> MVVM ViewModels, Görünüm Mantığı ve Diyalog Servisleri
+└── ScheduledCopyManager.Tests/        -> Unit ve Regresyon Testleri
 ```
 
----
-
-## 12. Klasör Yapısı
-
-```
-Terabithia-Sync/
-├── .github/
-│   └── workflows/
-│       └── build.yml                   # GitHub Actions CI Workflow
-├── Assets/                             # Uygulama logosu ve ICO varlıkları
-├── docs/
-│   └── screenshots/                    # Ekran görüntüleri
-├── Installer/
-│   ├── TerabithiaSync.iss             # Inno Setup derleme senaryosu
-│   └── Build-Installer.ps1            # Kurulum derleme PowerShell betiği
-├── ScheduledCopyManager.App/           # WPF Uygulaması
-│   ├── Views/                          # XAML Pencereleri ve Görünümler
-│   ├── App.xaml / App.xaml.cs
-│   └── TerabithiaSync.ico
-├── ScheduledCopyManager.Domain/        # Domain Modelleri ve Arabirimler
-├── ScheduledCopyManager.Infrastructure/# Kopyalama Motoru & Servisler
-├── ScheduledCopyManager.Presentation/  # ViewModels ve UI Mantığı
-├── ScheduledCopyManager.Tests/         # Birim Testleri
-├── Directory.Build.props               # Ortak Derleme Ayarları
-├── ScheduledCopyManager.slnx           # Solution Dosyası
-├── LICENSE.txt / LICENSE               # Çift Dilli Lisans Sözleşmesi
-├── README.md                           # Proje Dokümantasyonu
-└── .gitignore                          # Git İstisna Kuralları
-```
+### Kullanılan Teknolojiler
+- **Masaüstü Altyapısı:** WPF / .NET 8.0 (win-x64)
+- **MVVM Framework:** `CommunityToolkit.Mvvm`
+- **Zamanlayıcı Altyapısı:** `Quartz.NET`
+- **Günlükleme (Logging):** `Serilog` (Dosya ve UI log akışı)
+- **Veri Depolama:** `System.Text.Json` (Ayarlar, Görevler, Geçmiş ve Kontrol Noktaları)
+- **Bildirimler:** Windows Toast Notifications & System Tray Entegrasyonu
 
 ---
 
-## 13. Kurulum ve Yayınlama
+## Kesinti ve Kurtarma Davranışı
 
-### Hazır Kurulum Dosyası (Installer)
-1. [Releases](../../releases) sayfasından `TerabithiaSync-Setup-1.0.0.exe` dosyasını indirin.
-2. Kurulumu çalıştırın ve ekrandaki yönergeleri izleyin.
-3. Uygulama otomatik olarak masaüstü ve başlat menüsü kısayollarını oluşturacaktır.
+Terabithia Sync, kopyalama sırasında oluşabilecek kesintilere karşı veri güvenliğini garanti eder:
 
-### Bağımsız (Self-Contained) Yayınlama
-Bilgisayarda .NET Runtime yüklü olmasına gerek kalmadan tek klasörlük bağımsız executable üretmek için:
-
-```powershell
-dotnet publish ScheduledCopyManager.App/ScheduledCopyManager.App.csproj -c Release -r win-x64 --self-contained true -o Release/TerabithiaSync
-```
+1. **Durum Kaydı (Checkpointing):** Kopyalama sırasında aktarılan dosya durumları periyodik olarak diske yazılır.
+2. **Doğrulama ve Atlama:** Kurtarma işleminde daha önce başarıyla tamamlanan dosyalar tekrar kopyalanmaz.
+3. **Güvenli Otomatik Yeniden Başlatmama:** Uygulama veya bilgisayar aniden kapandığında, uygulama yeniden açıldığında kopyalama **otomatik başlamaz**. Arayüzde bir **Kurtarma Banner'ı** belirir ve kullanıcının "Devam Et" butonuna basması beklenir.
+4. **USB Otomatik Devam Etme:** Canlı kopyalama sırasında USB bellek çıkarılırsa görev duraklatılır ve bellek tekrar takıldığında yapılandırılan politikaya göre otomatik devam eder.
+5. **Aynı İşe Ait Çifte Çalıştırma Engeli:** Aynı görevin veya geçmişten yeniden denemenin çakışmasını önlemek için merkezi kilit mekanizması kullanılır.
 
 ---
 
-## 14. Kullanım Adımları
+## USB Hedef Güvenliği
 
-1. **Uygulamayı Başlatın:** Terabithia Sync simgesine tıklayarak uygulamayı açın.
-2. **Yeni Görev Ekleyin:** Ana menüden **Kopyalama Görevleri** -> **Yeni Görev Ekle** butonuna basın.
-3. **Kaynak ve Hedef Seçin:**
-   - **Dosya Ekle** veya **Klasör Ekle** butonları ile kaynak yolları ekleyin.
-   - **Hedef Klasör Yolu** alanından yedekleme yapılacak konumu seçin.
-4. **Zamanlama ve Mod Ayarlayın:**
-   - Zamanlama tipini seçin (örn. Her gün 23:00).
-   - Kopyalama modunu (Artımlı, Ayna veya Yalnızca Doğrula) belirleyin.
-   - Çakışma politikasını ayarlayın.
-5. **Kaydedin ve Çalıştırın:** Görevi kaydedin. Dilerseniz listeden görevi seçip **"Şimdi Çalıştır"** butonuna basarak ilk yedeklemeyi başlatın.
-6. **Geçmişi İnceleyin:** **Kopyalama Geçmişi** sekmesinden aktarılan dosya sayılarını ve detayları görün.
+- Terabithia Sync, çıkarılabilir USB sürücüleri tanımlarken Windows Birim Seri Numarasını (Volume Serial identity) kaydeder.
+- Sürücü harfi değişse bile (örneğin `E:` yerine `F:` olduğunda), uygulama seri numarasından USB diski otomatik tespit eder.
+- Başka bir USB diski eski sürücü harfini aldığında, uygulama yanlış diske kopyalama yapmaz ve işlemi durdurur.
 
 ---
 
-## 15. Örnek Kullanım Senaryoları
+## Kurulum
 
-### Senaryo 1: Sunucu Klasöründen USB Diske Günlük Otomatik Yedekleme
-- **Kaynak:** `\\192.168.1.100\Paylasim\Muhasebe`
-- **Hedef:** `E:\Yedekler\Muhasebe` (USB Bellek)
-- **Zamanlama:** Her Gün 18:30
-- **Mod:** Artımlı Kopyalama (Incremental)
-- **Sonuç:** Mesai bitiminde takılı olan USB belleğe yalnızca o gün değişen muhasebe evrakları otomatik aktarılır.
+Resmi hazır kurulum paketleri [GitHub Releases](https://github.com/Terabithia1572/Terabithia-Sync/releases) sayfasında sunulmaktadır.
 
-### Senaryo 2: Yerel Proje Klasörünün İkinci Diske Birebir Ayna Yedeklemesi
-- **Kaynak:** `D:\Projeler`
-- **Hedef:** `F:\Projeler_Ayna`
-- **Zamanlama:** Her Hafta Cuma 22:00
-- **Mod:** Ayna Modu (Mirror) + Silme İzni Etkin
-- **Sonuç:** Silinen eski proje taslakları hedef diskte de temizlenerek F: diskinde kaynağın birebir kopyası tutulur.
+Kurulum paketi **bağımsız (self-contained win-x64)** olarak paketlendiği için kullanıcının bilgisayarına ayrıca .NET Desktop Runtime yüklemesine gerek yoktur.
 
 ---
 
-## 16. Geliştirici Kurulumu (Developer Setup)
+## Geliştirme ve Derleme
 
-Projeyi yerel ortamınızda geliştirmek ve derlemek için:
-
-### Gereksinimler:
-- Windows 10/11 x64
-- Visual Studio 2022 (v17.8+) veya Visual Studio Code (.NET C# Dev Kit ile)
+### Gereksinimler
+- Windows 10 / 11 x64
 - .NET 8.0 SDK
+- Visual Studio 2022 (v17.8+) veya uyumlu C# geliştirme ortamı
 
-### Derleme Adımları:
+### Derleme Komutları
 ```powershell
-# 1. Depoyu klonlayın
-git clone https://github.com/YunusInan/Terabithia-Sync.git
-cd Terabithia-Sync
+# Geri yükleme
+dotnet restore
 
-# 2. Bağımlılıkları geri yükleyin
-dotnet restore ScheduledCopyManager.slnx
+# Derleme
+dotnet build -c Release
 
-# 3. Projeyi derleyin
-dotnet build ScheduledCopyManager.slnx -c Release
-
-# 4. Testleri çalıştırın
-dotnet test ScheduledCopyManager.slnx -c Release
+# Testleri çalıştırma (Benchmark hariç regresyon paketi)
+dotnet test ScheduledCopyManager.Tests\ScheduledCopyManager.Tests.csproj -c Release --filter "FullyQualifiedName!~Benchmark"
 ```
 
 ---
 
-## 17. Birim Testleri (Unit Tests)
+## Sürüm ve Durum
 
-Projeye ait iş kuralları `ScheduledCopyManager.Tests` altında xUnit ile test edilmektedir.
-
-```powershell
-dotnet test --configuration Release --nologo
-```
-
-### Test Edilen Ana Bileşenler:
-- Çoklu kaynak dosya/klasör kaldırma ve yol normalleştirme (`SourceItemSelectionTests`)
-- Türkçe Windows hata mesajı çevirileri (`UserFriendlyErrorTranslatorTests`)
-- Artımlı ve ayna modu dosya kopyalama mantığı (`FileCopyServiceTests`)
-- Yanlış veya eksik yol doğrulaması (`PathValidationTests`)
-- Sadece başarısız dosyaları yeniden deneme mekanizması (`RetryFailedFilesTests`)
+- **Uygulama Sürümü:** `1.0.0`
+- **Kararlı Derleme Kimliği (BuildId):** `1.0.0-phase3-unified-retry-execution-v14.2`
+- **Durum:** Phase 3 Kararlı (Actively Tested)
 
 ---
 
-## 18. Inno Setup Kurulum Derlemesi
+## English Summary
 
-Inno Setup Compiler yüklü bir sistemde kurulum `.exe` dosyasını derlemek için hazırlanan betiği çalıştırabilirsiniz:
+**Terabithia Sync** is a robust, scheduled, incremental file and folder copy manager for Windows built with C# and .NET 8.
 
-```powershell
-powershell -ExecutionPolicy Bypass -File Installer/Build-Installer.ps1
-```
-
-Derleme sonucunda oluşturulan kurulum dosyası `Release/Installer/TerabithiaSync-Setup-1.0.0.exe` konumunda yer alır.
-
----
-
-## 19. Lisans (License)
-
-Bu proje **Yunus İNAN** tarafından geliştirilmiştir ve **Çift Dilli Lisans (MIT License)** altında yayınlanmaktadır.
-
-Ayrıntılar için [LICENSE](LICENSE) dosyasına göz atabilirsiniz.
-
-```
-Telif Hakkı (c) 2026 Yunus İNAN. Tüm Hakları Saklıdır. / Copyright (c) 2026 Yunus İNAN. All Rights Reserved.
-```
+### Key Features
+- **Flexible Scheduling:** Daily, weekly, monthly, one-time, and custom Quartz.NET Cron schedules.
+- **Copy Modes:** Incremental (copies updated files), Mirror (exact source replica), and Verify-Only.
+- **Conflict Handling:** Skip, Overwrite, or Rename files.
+- **Persistent Checkpoint Recovery:** Interrupted copy sessions persist progress; completed files are verified and skipped upon user resume.
+- **USB Target Safety:** Volume Serial Identity matching resolves drive-letter shifts and prevents writing to incorrect devices.
+- **Centralized Retry Pipeline:** Granular file-level history tracking with single-click retry execution.
+- **System Integration:** Windows Toast Notifications, System Tray support, Turkish & English localization, and diagnostic tools page.
 
 ---
 
-## 20. Katkıda Bulunma (Contributing)
+## Lisans
 
-Katkılarınız bizi mutlu eder! Hata bildirimleri, yeni özellik önerileri veya PR'lar için:
+Bu proje **Yunus İNAN** tarafından geliştirilmiştir ve çift dilli (Türkçe & MIT) lisans altında yayınlanmıştır. Ayrıntılar için [LICENSE](LICENSE) dosyasına bakabilirsiniz.
 
-1. Projeyi Fork edin (`fork`).
-2. Özellik dalınızı oluşturun (`git checkout -b ozellik/YeniOzellik`).
-3. Değişikliklerinizi işleyin (`git commit -m 'Ekle: Yeni özellik'`).
-4. Dalınıza push edin (`git push origin ozellik/YeniOzellik`).
-5. Bir Pull Request (PR) açın.
-
----
-
-## 21. Sorun Bildirme (Issue Reporting)
-
-Herhangi bir hata veya beklenmeyen durum ile karşılaşırsanız lütfen [GitHub Issues](../../issues) sayfasından yeni bir sorun bildiriminde bulunun.
-
-Bildiriminizde lütfen aşağıdaki bilgileri ekleyin:
-- Windows Sürümü (örn. Windows 11 23H2)
-- Hata Ekran Görüntüsü veya Günlük Metni (`%LOCALAPPDATA%\Terabithia Sync\Logs`)
-- Adım adım hatanın nasıl ortaya çıktığı
-
----
-
-## 22. Sürüm Notları (Release Notes)
-
-### Sürüm 1.0.0 (İlk Kararlı Sürüm)
-- ✨ İlk kararlı sürüm yayınlandı.
-- 🎨 Modern WPF kullanıcı arayüzü ve %100 Türkçe yerelleştirme.
-- ⏰ Quartz.NET entegrasyonlu zamanlanmış görev motoru.
-- 🔌 USB otomatik algılama ve kopyalama devam ettirme (Resume) desteği.
-- 📊 Gruplanmış hiyerarşik günlükler ve detaylı kopyalama geçmişi.
-- 📦 Inno Setup ile tek tıkla Windows kurulum paketi.
+Copyright (c) 2026 Yunus İNAN. Tüm Hakları Saklıdır.

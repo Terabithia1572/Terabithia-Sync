@@ -1,0 +1,77 @@
+<Window x:Class="ScheduledCopyManager.Presentation.Views.LogDetailView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="{DynamicResource Str_LogDetails_Title}" Height="550" Width="720"
+        WindowStartupLocation="CenterOwner" ResizeMode="CanResize" Background="#F8FAFC">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </Window.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="15"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="15"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+                <TextBlock Text="{DynamicResource Str_LogDetails_Title}" FontSize="20" FontWeight="Bold" Foreground="#1E293B"/>
+                <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                    <TextBlock Text="{DynamicResource Str_Logs_ColTime}" FontWeight="SemiBold" Foreground="#64748B"/>
+                    <TextBlock Text=": " Foreground="#64748B"/>
+                    <TextBlock Text="{Binding FormattedTimestamp}" FontWeight="Bold" Foreground="#1E293B" Margin="0,0,15,0"/>
+
+                    <TextBlock Text="{DynamicResource Str_Logs_ColLevel}" FontWeight="SemiBold" Foreground="#64748B"/>
+                    <TextBlock Text=": " Foreground="#64748B"/>
+                    <Border Padding="6,2" CornerRadius="4" Background="#3B82F6" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding Level}" Foreground="White" FontSize="11" FontWeight="Bold"/>
+                    </Border>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+
+        <!-- Main Scrollable Content -->
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <!-- Message Section -->
+                <Border Background="White" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="8" Padding="15" Margin="0,0,0,15">
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource Str_Logs_ColMessage}" FontSize="13" FontWeight="Bold" Foreground="#475569" Margin="0,0,0,8"/>
+                        <TextBox Text="{Binding Message, Mode=OneWay}" IsReadOnly="True" TextWrapping="Wrap"
+                                 AcceptsReturn="True" BorderThickness="0" Background="Transparent"
+                                 FontSize="13" Foreground="#1E293B"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Exception / Stack Trace Section -->
+                <Border Background="#FEF2F2" BorderBrush="#FCA5A5" BorderThickness="1" CornerRadius="8" Padding="15"
+                        Visibility="{Binding HasException, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource Str_Logs_ColErrorDetail}" FontSize="13" FontWeight="Bold" Foreground="#991B1B" Margin="0,0,0,8"/>
+                        <TextBox Text="{Binding Exception, Mode=OneWay}" IsReadOnly="True" TextWrapping="Wrap"
+                                 AcceptsReturn="True" BorderThickness="0" Background="Transparent"
+                                 FontFamily="Consolas, Courier New" FontSize="12" Foreground="#7F1D1D"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Footer Action Buttons -->
+        <Grid Grid.Row="4">
+            <Button Content="{DynamicResource Str_LogDetails_CopyToClipboard}" Command="{Binding CopyToClipboardCommand}"
+                    HorizontalAlignment="Left" Padding="14,8" Style="{StaticResource ModernSecondaryButtonStyle}"/>
+            
+            <Button Content="{DynamicResource Str_Common_Close}" Command="{Binding CloseCommand}"
+                    HorizontalAlignment="Right" Padding="16,8" Style="{StaticResource ModernPrimaryButtonStyle}"/>
+        </Grid>
+    </Grid>
+</Window>

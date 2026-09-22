@@ -20,6 +20,7 @@
     <ProjectReference Include="..\ScheduledCopyManager.Domain\ScheduledCopyManager.Domain.csproj" />
     <ProjectReference Include="..\ScheduledCopyManager.Infrastructure\ScheduledCopyManager.Infrastructure.csproj" />
     <ProjectReference Include="..\ScheduledCopyManager.Presentation\ScheduledCopyManager.Presentation.csproj" />
+    <ProjectReference Include="..\ScheduledCopyManager.App\ScheduledCopyManager.App.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,0 +1,171 @@
+<UserControl x:Class="ScheduledCopyManager.Presentation.Views.ToolsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d" 
+             d:DesignHeight="650" d:DesignWidth="850">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </UserControl.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="15"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <StackPanel Grid.Row="0">
+            <TextBlock Text="{DynamicResource Str_Nav_Tools}" FontSize="24" FontWeight="Bold" Foreground="#2C3E50"/>
+            <TextBlock Text="{DynamicResource Str_Tools_SubTitle}" FontSize="13" Foreground="#7F8C8D" Margin="0,3,0,0"/>
+        </StackPanel>
+
+        <!-- Main Content Cards ScrollViewer -->
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="0,0,10,0">
+                
+                <!-- Section A: Connected Drives -->
+                <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="18" Margin="0,0,0,15">
+                    <StackPanel>
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{DynamicResource Str_Tools_ConnectedDrivesTitle}" FontSize="16" FontWeight="Bold" Foreground="#1E293B" VerticalAlignment="Center"/>
+                            <Button Grid.Column="1" Content="{DynamicResource Str_Tools_RefreshDrives}" Command="{Binding RefreshDrivesCommand}" Padding="12,6" Style="{StaticResource ModernSecondaryButtonStyle}"/>
+                        </Grid>
+
+                        <DataGrid ItemsSource="{Binding RemovableDrives}" AutoGenerateColumns="False" IsReadOnly="True"
+                                  GridLinesVisibility="Horizontal" HeadersVisibility="Column" Background="Transparent" BorderThickness="0"
+                                  Visibility="{Binding HasRemovableDrives, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="{DynamicResource Str_Tools_ColDriveLetter}" Binding="{Binding DriveLetter}" Width="90"/>
+                                <DataGridTextColumn Header="{DynamicResource Str_Tools_ColVolumeLabel}" Binding="{Binding DisplayLabel}" Width="140"/>
+                                <DataGridTextColumn Header="{DynamicResource Str_Tools_ColVolumeSerial}" Binding="{Binding VolumeSerialNumber}" Width="130"/>
+                                <DataGridTextColumn Header="{DynamicResource Str_Tools_ColFileSystem}" Binding="{Binding FileSystem}" Width="100"/>
+                                <DataGridTextColumn Header="{DynamicResource Str_Tools_ColCapacity}" Binding="{Binding FormattedTotalSize}" Width="110"/>
+                                <DataGridTextColumn Header="{DynamicResource Str_Tools_ColFreeSpace}" Binding="{Binding FormattedFreeSpace}" Width="110"/>
+                                <DataGridTextColumn Header="{DynamicResource Str_Tools_ColStatus}" Binding="{Binding Status}" Width="*"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                        <TextBlock Text="{DynamicResource Str_Tools_NoDrivesFound}" Foreground="#64748B" FontSize="13" FontStyle="Italic" Margin="0,5,0,0">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding HasRemovableDrives}" Value="False">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
+
+                <!-- Section B: Quick Access -->
+                <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="18" Margin="0,0,0,15">
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource Str_Tools_QuickAccessTitle}" FontSize="16" FontWeight="Bold" Foreground="#1E293B" Margin="0,0,0,12"/>
+                        <WrapPanel>
+                            <Button Content="{DynamicResource Str_Tools_OpenDataFolder}" Command="{Binding OpenDataFolderCommand}" Padding="14,8" Margin="0,0,10,10" Style="{StaticResource ModernPrimaryButtonStyle}"/>
+                            <Button Content="{DynamicResource Str_Tools_OpenLogFolder}" Command="{Binding OpenLogFolderCommand}" Padding="14,8" Margin="0,0,10,10" Style="{StaticResource ModernSecondaryButtonStyle}"/>
+                            <Button Content="{DynamicResource Str_Tools_OpenCheckpointFolder}" Command="{Binding OpenCheckpointFolderCommand}" Padding="14,8" Margin="0,0,10,10" Style="{StaticResource ModernSecondaryButtonStyle}"/>
+                        </WrapPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- Section C: Diagnostics -->
+                <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="18">
+                    <StackPanel>
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{DynamicResource Str_Tools_DiagnosticsTitle}" FontSize="16" FontWeight="Bold" Foreground="#1E293B" VerticalAlignment="Center"/>
+                            <Button Grid.Column="1" Content="{DynamicResource Str_Tools_CopyDiagnostics}" Command="{Binding CopyDiagnosticsToClipboardCommand}" Padding="12,6" Style="{StaticResource ModernSuccessButtonStyle}"/>
+                        </Grid>
+
+                        <Grid Margin="0,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="180"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{DynamicResource Str_About_Version}" Foreground="#64748B" FontWeight="SemiBold"/>
+                            <TextBlock Grid.Column="1" Text="{Binding AppVersion}" Foreground="#10B981" FontWeight="Bold"/>
+                        </Grid>
+
+                        <Grid Margin="0,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="180"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="BuildId:" Foreground="#64748B" FontWeight="SemiBold"/>
+                            <TextBlock Grid.Column="1" Text="{Binding BuildId}" Foreground="#2563EB" FontWeight="Bold"/>
+                        </Grid>
+
+                        <Grid Margin="0,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="180"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{DynamicResource Str_About_Runtime}" Foreground="#64748B" FontWeight="SemiBold"/>
+                            <TextBlock Grid.Column="1" Text="{Binding Runtime}" Foreground="#334155"/>
+                        </Grid>
+
+                        <Grid Margin="0,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="180"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{DynamicResource Str_About_Platform}" Foreground="#64748B" FontWeight="SemiBold"/>
+                            <TextBlock Grid.Column="1" Text="{Binding OperatingSystem}" Foreground="#334155"/>
+                        </Grid>
+
+                        <Grid Margin="0,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="180"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Mimari:" Foreground="#64748B" FontWeight="SemiBold"/>
+                            <TextBlock Grid.Column="1" Text="{Binding ProcessArchitecture}" Foreground="#334155"/>
+                        </Grid>
+
+                        <Grid Margin="0,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="180"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Uygulama Veri Yolu:" Foreground="#64748B" FontWeight="SemiBold"/>
+                            <TextBlock Grid.Column="1" Text="{Binding AppDataPath}" Foreground="#475569" TextTrimming="CharacterEllipsis" ToolTip="{Binding AppDataPath}"/>
+                        </Grid>
+
+                        <Grid Margin="0,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="180"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Log Klasör Yolu:" Foreground="#64748B" FontWeight="SemiBold"/>
+                            <TextBlock Grid.Column="1" Text="{Binding LogPath}" Foreground="#475569" TextTrimming="CharacterEllipsis" ToolTip="{Binding LogPath}"/>
+                        </Grid>
+
+                        <Grid Margin="0,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="180"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Checkpoint Yolu:" Foreground="#64748B" FontWeight="SemiBold"/>
+                            <TextBlock Grid.Column="1" Text="{Binding CheckpointPath}" Foreground="#475569" TextTrimming="CharacterEllipsis" ToolTip="{Binding CheckpointPath}"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

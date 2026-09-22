@@ -18,13 +18,16 @@ namespace ScheduledCopyManager.Presentation.ViewModels
         public int FilesCopied { get; set; }
         public int FilesSkipped { get; set; }
         public int FilesFailed { get; set; }
+        public int FilesIncomplete { get; set; }
         public long BytesCopied { get; set; }
 
         public ObservableCollection<FileItemResultViewModel> ChildFileLogs { get; } = new();
 
         public string ExpandIcon => IsExpanded ? "▼" : "▶";
 
-        public string SummaryText => $"[{JobName}] — {TotalFiles} dosya ({FilesCopied} Kopyalandı, {FilesFailed} Hatalı, {FilesSkipped} Atlandı) — {(BytesCopied / (1024 * 1024.0)):F1} MB — {Timestamp:dd.MM.yyyy HH:mm:ss}";
+        public string SummaryText => FilesIncomplete > 0
+            ? $"[{JobName}] — {TotalFiles} dosya ({FilesCopied} Kopyalandı, {FilesFailed} Hatalı, {FilesSkipped} Atlandı, {FilesIncomplete} Yarım Kalan) — {(BytesCopied / (1024 * 1024.0)):F1} MB — {Timestamp:dd.MM.yyyy HH:mm:ss}"
+            : $"[{JobName}] — {TotalFiles} dosya ({FilesCopied} Kopyalandı, {FilesFailed} Hatalı, {FilesSkipped} Atlandı) — {(BytesCopied / (1024 * 1024.0)):F1} MB — {Timestamp:dd.MM.yyyy HH:mm:ss}";
 
         [RelayCommand]
         public void ToggleExpand()

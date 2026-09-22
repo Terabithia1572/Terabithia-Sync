@@ -63,74 +63,142 @@
         <TabControl Grid.Row="4" SelectedIndex="{Binding SelectedTabIndex}" Background="Transparent" BorderThickness="0">
             <!-- Tab 1: Grouped Job Logs -->
             <TabItem Header="📋 Görev İşlem Kayıtları (Gruplanmış)" FontSize="13" FontWeight="SemiBold" Padding="12,6">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,10,0,0">
-                    <ItemsControl ItemsSource="{Binding GroupedLogs}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Border Margin="0,0,0,10" Background="White" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="8" Padding="12">
-                                    <StackPanel>
-                                        <!-- Group Header Bar -->
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto"/>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="Auto"/>
-                                            </Grid.ColumnDefinitions>
+                <Grid Margin="0,10,0,0">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{Binding GroupedLogs}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Margin="0,0,0,10" Background="White" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="8" Padding="12">
+                                        <StackPanel>
+                                            <!-- Group Header Bar -->
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
 
-                                            <Button Grid.Column="0" Content="{Binding ExpandIcon}" Command="{Binding ToggleExpandCommand}"
-                                                    Background="Transparent" BorderThickness="0" FontSize="14" FontWeight="Bold" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                                <Button Grid.Column="0" Content="{Binding ExpandIcon}" Command="{Binding ToggleExpandCommand}"
+                                                        Background="Transparent" BorderThickness="0" FontSize="14" FontWeight="Bold" Margin="0,0,10,0" VerticalAlignment="Center"/>
 
-                                            <TextBlock Grid.Column="1" Text="{Binding SummaryText}" FontSize="13" FontWeight="Bold" Foreground="#1E293B" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                                <TextBlock Grid.Column="1" Text="{Binding SummaryText}" ToolTip="{Binding SummaryText}" FontSize="13" FontWeight="Bold" Foreground="#1E293B" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
 
-                                            <Border Grid.Column="2" Padding="8,3" CornerRadius="4" VerticalAlignment="Center"
-                                                    Background="{Binding Status, Converter={StaticResource StatusToColorConverter}}">
-                                                <TextBlock Text="{Binding Status, Converter={StaticResource StatusToTextConverter}}" Foreground="White" FontSize="10" FontWeight="Bold"/>
+                                                <Border Grid.Column="2" Padding="8,3" CornerRadius="4" VerticalAlignment="Center"
+                                                        Background="{Binding Status, Converter={StaticResource StatusToColorConverter}}">
+                                                    <TextBlock Text="{Binding Status, Converter={StaticResource StatusToTextConverter}}" Foreground="White" FontSize="10" FontWeight="Bold"/>
+                                                </Border>
+                                            </Grid>
+
+                                            <!-- Expanded Child File Operations -->
+                                            <Border Margin="0,10,0,0" Padding="10" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6"
+                                                    Visibility="{Binding IsExpanded, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                <DataGrid ItemsSource="{Binding ChildFileLogs}" AutoGenerateColumns="False" IsReadOnly="True"
+                                                          GridLinesVisibility="Horizontal" HeadersVisibility="Column" Background="Transparent" BorderThickness="0" MaxHeight="250">
+                                                    <DataGrid.Columns>
+                                                        <DataGridTemplateColumn Header="Durum" Width="90">
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                                        <TextBlock Text="{Binding Icon}" Foreground="{Binding IconColor}" FontWeight="Bold" FontSize="12" Margin="0,0,5,0"/>
+                                                                        <TextBlock Text="{Binding StatusText}" FontSize="11" FontWeight="SemiBold"/>
+                                                                    </StackPanel>
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn Header="Dosya Adı" Width="160">
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding FileName}" ToolTip="{Binding FileName}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn Header="Yol" Width="200">
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding RelativePath}" ToolTip="{Binding RelativePath}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTextColumn Header="Boyut" Binding="{Binding FileSize, Converter={StaticResource BytesToFormattedConverter}}" Width="90"/>
+                                                        <DataGridTemplateColumn Header="Hata Detayı" Width="*">
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding ErrorMessage}" ToolTip="{Binding ErrorMessage}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                    </DataGrid.Columns>
+                                                </DataGrid>
                                             </Border>
-                                        </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
 
-                                        <!-- Expanded Child File Operations -->
-                                        <Border Margin="0,10,0,0" Padding="10" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6"
-                                                Visibility="{Binding IsExpanded, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                            <DataGrid ItemsSource="{Binding ChildFileLogs}" AutoGenerateColumns="False" IsReadOnly="True"
-                                                      GridLinesVisibility="Horizontal" HeadersVisibility="Column" Background="Transparent" BorderThickness="0" MaxHeight="250">
-                                                <DataGrid.Columns>
-                                                    <DataGridTemplateColumn Header="Durum" Width="90">
-                                                        <DataGridTemplateColumn.CellTemplate>
-                                                            <DataTemplate>
-                                                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                                                    <TextBlock Text="{Binding Icon}" Foreground="{Binding IconColor}" FontWeight="Bold" FontSize="12" Margin="0,0,5,0"/>
-                                                                    <TextBlock Text="{Binding StatusText}" FontSize="11" FontWeight="SemiBold"/>
-                                                                </StackPanel>
-                                                            </DataTemplate>
-                                                        </DataGridTemplateColumn.CellTemplate>
-                                                    </DataGridTemplateColumn>
-                                                    <DataGridTextColumn Header="Dosya Adı" Binding="{Binding FileName}" Width="160"/>
-                                                    <DataGridTextColumn Header="Yol" Binding="{Binding RelativePath}" Width="200"/>
-                                                    <DataGridTextColumn Header="Boyut" Binding="{Binding FileSize, Converter={StaticResource BytesToFormattedConverter}}" Width="90"/>
-                                                    <DataGridTextColumn Header="Hata Detayı" Binding="{Binding ErrorMessage}" Width="*"/>
-                                                </DataGrid.Columns>
-                                            </DataGrid>
-                                        </Border>
-                                    </StackPanel>
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
+                    <TextBlock Text="Gösterilecek kayıt bulunmuyor." Foreground="#64748B" FontSize="14" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HasGroupedLogs}" Value="False">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Grid>
             </TabItem>
 
             <!-- Tab 2: System Logs -->
             <TabItem Header="⚙️ Sistem Günlükleri" FontSize="13" FontWeight="SemiBold" Padding="12,6">
                 <Border Margin="0,10,0,0" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="10">
-                    <DataGrid ItemsSource="{Binding LogEntries}" AutoGenerateColumns="False" IsReadOnly="True"
-                              GridLinesVisibility="Horizontal" HeadersVisibility="Column" Background="Transparent" BorderThickness="0">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Zaman" Binding="{Binding Timestamp, StringFormat=\{0:dd.MM.yyyy HH:mm:ss.fff\}}" Width="180"/>
-                            <DataGridTextColumn Header="Seviye" Binding="{Binding Level}" Width="90"/>
-                            <DataGridTextColumn Header="Mesaj" Binding="{Binding Message}" Width="*"/>
-                            <DataGridTextColumn Header="Hata Detayı" Binding="{Binding Exception}" Width="250"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
+                    <Grid>
+                        <DataGrid ItemsSource="{Binding LogEntries}" SelectedItem="{Binding SelectedLogEntry, Mode=TwoWay}" AutoGenerateColumns="False" IsReadOnly="True"
+                                  GridLinesVisibility="Horizontal" HeadersVisibility="Column" Background="Transparent" BorderThickness="0">
+                            <DataGrid.InputBindings>
+                                <KeyBinding Key="Return" Command="{Binding ShowLogDetailsCommand}" CommandParameter="{Binding SelectedLogEntry}"/>
+                            </DataGrid.InputBindings>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <EventSetter Event="Control.MouseDoubleClick" Handler="OnDataGridRowMouseDoubleClick"/>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Zaman" Binding="{Binding Timestamp, StringFormat=\{0:dd.MM.yyyy HH:mm:ss.fff\}}" Width="180"/>
+                                <DataGridTextColumn Header="Seviye" Binding="{Binding Level}" Width="90"/>
+                                <DataGridTemplateColumn Header="Mesaj" Width="*">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Message}" ToolTip="{Binding Message}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="Hata Detayı" Width="250">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Exception}" ToolTip="{Binding Exception}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                        <TextBlock Text="Gösterilecek kayıt bulunmuyor." Foreground="#64748B" FontSize="14" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding HasLogEntries}" Value="False">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Grid>
                 </Border>
             </TabItem>
         </TabControl>

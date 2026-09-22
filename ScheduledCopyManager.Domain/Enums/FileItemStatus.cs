@@ -9,6 +9,7 @@ namespace ScheduledCopyManager.Domain.Enums
         Failed,
         Retrying,
         WaitingForDestination,
-        Cancelled
+        Cancelled,
+        Incomplete
     }
 }

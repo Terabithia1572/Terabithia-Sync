@@ -32,6 +32,8 @@ namespace ScheduledCopyManager.Tests
 
             public Task<Job?> ShowJobEditorAsync(Job? job = null) => Task.FromResult<Job?>(null);
             public Task ShowHistoryDetailsAsync(HistoryEntry entry) => Task.CompletedTask;
+            public Task ShowLogDetailsAsync(LogEntry logEntry) => Task.CompletedTask;
+            public Task ShowRecoveryDetailsAsync(JobCheckpoint checkpoint) => Task.CompletedTask;
             public Task<bool> ShowConfirmationAsync(string title, string message) => Task.FromResult(ConfirmationResponse);
             public Task ShowMessageAsync(string title, string message) => Task.CompletedTask;
             public string? SelectFolder(string title = "Klasör Seçin") => FoldersToReturn.FirstOrDefault();
@@ -124,10 +126,15 @@ namespace ScheduledCopyManager.Tests
             Assert.Contains("rapor (1).xlsx", vm.ConflictPolicyExplanation);
         }
 
+        private class DummyPreflightValidationService : IPreflightValidationService
+        {
+            public Task<PreflightResult> ValidateJobAsync(Job job) => Task.FromResult(PreflightResult.Success());
+        }
+
         [Fact]
         public async Task JobEditorViewModel_TestJobAsync_SetsOnIzlemeResultMessage()
         {
-            var vm = new JobEditorViewModel(new DummyPathValidationService(), new DummyDialogService());
+            var vm = new JobEditorViewModel(new DummyPathValidationService(), new DummyDialogService(), preflightValidationService: new DummyPreflightValidationService());
             vm.SourcePaths.Add(@"C:\TestFile.txt");
             vm.DestinationPath = @"D:\Destination";
 

@@ -17,16 +17,20 @@ namespace ScheduledCopyManager.Presentation.ViewModels
         [ObservableProperty] private string _selectedLevelFilter = "HEPSİ";
         [ObservableProperty] private string _searchText = string.Empty;
         [ObservableProperty] private int _selectedTabIndex = 0;
+        [ObservableProperty] private LogEntry? _selectedLogEntry;
+
+        private readonly Services.IDialogService? _dialogService;
 
         public ObservableCollection<LogEntry> LogEntries { get; } = new();
         public ObservableCollection<GroupedLogItemViewModel> GroupedLogs { get; } = new();
 
         public string[] LevelFilters { get; } = new string[] { "HEPSİ", "BİLGİ", "UYARI", "HATA" };
 
-        public LogsViewModel(ILogService logService, IHistoryRepository historyRepository)
+        public LogsViewModel(ILogService logService, IHistoryRepository historyRepository, Services.IDialogService? dialogService = null)
         {
             _logService = logService;
             _historyRepository = historyRepository;
+            _dialogService = dialogService;
         }
 
         public async void Initialize()
@@ -77,15 +81,22 @@ namespace ScheduledCopyManager.Presentation.ViewModels
 
                 foreach (var entry in historyQuery)
                 {
+                    int totalFilesCount = entry.TotalFilesPlanned > 0
+                        ? entry.TotalFilesPlanned
+                        : (entry.FileResults != null && entry.FileResults.Any()
+                            ? entry.FileResults.Count
+                            : entry.FilesCopied + entry.FilesSkipped + entry.FilesFailed + entry.FilesIncomplete);
+
                     var groupVm = new GroupedLogItemViewModel
                     {
                         JobName = entry.JobName,
                         Timestamp = entry.StartTime,
                         Status = entry.Status,
-                        TotalFiles = entry.FilesCopied + entry.FilesSkipped + entry.FilesFailed,
+                        TotalFiles = totalFilesCount,
                         FilesCopied = entry.FilesCopied,
                         FilesSkipped = entry.FilesSkipped,
                         FilesFailed = entry.FilesFailed,
+                        FilesIncomplete = entry.FilesIncomplete,
                         BytesCopied = entry.BytesCopied
                     };
 
@@ -99,15 +110,29 @@ namespace ScheduledCopyManager.Presentation.ViewModels
 
                     GroupedLogs.Add(groupVm);
                 }
+
+                OnPropertyChanged(nameof(HasGroupedLogs));
+                OnPropertyChanged(nameof(HasLogEntries));
             }
             catch { }
         }
 
+        public bool HasGroupedLogs => GroupedLogs.Count > 0;
+        public bool HasLogEntries => LogEntries.Count > 0;
+
         [RelayCommand]
-        public void ClearLogs()
+        public async Task ClearLogsAsync()
         {
+            if (_dialogService != null)
+            {
+                bool confirm = await _dialogService.ShowConfirmationAsync(
+                    "Günlükleri Temizle",
+                    "Sistem günlüklerini temizlemek istediğinizden emin misiniz?");
+                if (!confirm) return;
+            }
+
             _logService.ClearLogs();
-            _ = RefreshLogsAsync();
+            await RefreshLogsAsync();
         }
 
         [RelayCommand]
@@ -122,6 +147,14 @@ namespace ScheduledCopyManager.Presentation.ViewModels
                 }
             }
             catch { }
+        }
+
+        [RelayCommand]
+        public async Task ShowLogDetailsAsync(LogEntry? entry)
+        {
+            var target = entry ?? SelectedLogEntry;
+            if (target == null || _dialogService == null) return;
+            await _dialogService.ShowLogDetailsAsync(target);
         }
     }
 }

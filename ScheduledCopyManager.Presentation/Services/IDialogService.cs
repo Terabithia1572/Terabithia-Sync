@@ -8,6 +8,8 @@ namespace ScheduledCopyManager.Presentation.Services
     {
         Task<Job?> ShowJobEditorAsync(Job? job = null);
         Task ShowHistoryDetailsAsync(HistoryEntry entry);
+        Task ShowLogDetailsAsync(Domain.Interfaces.LogEntry logEntry);
+        Task ShowRecoveryDetailsAsync(JobCheckpoint checkpoint);
         Task<bool> ShowConfirmationAsync(string title, string message);
         Task ShowMessageAsync(string title, string message);
         string? SelectFolder(string title = "Klasör Seçin");
