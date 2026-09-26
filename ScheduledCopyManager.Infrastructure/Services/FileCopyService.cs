@@ -154,6 +154,34 @@ namespace ScheduledCopyManager.Infrastructure.Services
                             continue;
                         }
 
+                        if (!dryRun)
+                        {
+                            if (!Directory.Exists(targetSubDir))
+                            {
+                                Directory.CreateDirectory(targetSubDir);
+                                if (job.CopyMode == CopyMode.Mirror)
+                                {
+                                    _logService?.LogInformation($"[MIRROR DECISION] Source='{fullSrc}' Destination='{targetSubDir}' SourceExists=True DestinationExists=False Decision=CreateDirectory Reason=DestinationMissing");
+                                }
+                            }
+
+                            var dirInfoForDirs = new DirectoryInfo(fullSrc);
+                            foreach (var subDir in dirInfoForDirs.EnumerateDirectories("*", SearchOption.AllDirectories))
+                            {
+                                cancellationToken.ThrowIfCancellationRequested();
+                                var relDir = Path.GetRelativePath(fullSrc, subDir.FullName);
+                                var destSubDir = Path.Combine(targetSubDir, relDir);
+                                if (!Directory.Exists(destSubDir))
+                                {
+                                    Directory.CreateDirectory(destSubDir);
+                                    if (job.CopyMode == CopyMode.Mirror)
+                                    {
+                                        _logService?.LogInformation($"[MIRROR DECISION] Source='{subDir.FullName}' Destination='{destSubDir}' SourceExists=True DestinationExists=False Decision=CreateDirectory Reason=DestinationMissing");
+                                    }
+                                }
+                            }
+                        }
+
                         var dirInfo = new DirectoryInfo(fullSrc);
                         var files = dirInfo.EnumerateFiles("*", SearchOption.AllDirectories);
                         foreach (var file in files)
@@ -266,6 +294,7 @@ namespace ScheduledCopyManager.Infrastructure.Services
             long totalBytes = fileList.Sum(f => f.Length);
             int totalFiles = fileList.Count;
             long currentBytesCopied = 0;
+            long physicalBytesWritten = 0;
             int filesCopied = 0;
             int filesSkipped = 0;
             int filesFailed = 0;
@@ -494,7 +523,7 @@ namespace ScheduledCopyManager.Infrastructure.Services
                             filesSkipped++;
                             currentBytesCopied += item.Length;
                             fileResultItem.Status = FileItemStatus.Skipped;
-                            fileResultItem.BytesTransferred = item.Length;
+                            fileResultItem.BytesTransferred = 0;
                             fileResultItem.EndedAt = DateTime.Now;
                             result.FileResults.Add(fileResultItem);
                             cpEntry.Status = CheckpointFileStatus.Skipped;
@@ -507,7 +536,7 @@ namespace ScheduledCopyManager.Infrastructure.Services
                             _logService?.LogInformation($"Dosya zaten hedefte ve atlandı: {Path.GetFileName(item.SourcePath)}");
                             continue;
                         }
-                        else if (job.CopyMode == CopyMode.Incremental && job.ConflictPolicy != ConflictPolicy.Rename)
+                        else if ((job.CopyMode == CopyMode.Incremental || job.CopyMode == CopyMode.Mirror) && job.ConflictPolicy != ConflictPolicy.Rename)
                         {
                             bool isSame = CheckIsSameFile(item, job.VerifyCopy);
                             if (isSame)
@@ -515,7 +544,7 @@ namespace ScheduledCopyManager.Infrastructure.Services
                                 filesSkipped++;
                                 currentBytesCopied += item.Length;
                                 fileResultItem.Status = FileItemStatus.Skipped;
-                                fileResultItem.BytesTransferred = item.Length;
+                                fileResultItem.BytesTransferred = 0;
                                 fileResultItem.EndedAt = DateTime.Now;
                                 result.FileResults.Add(fileResultItem);
                                 cpEntry.Status = CheckpointFileStatus.Skipped;
@@ -528,6 +557,13 @@ namespace ScheduledCopyManager.Infrastructure.Services
                                 _logService?.LogInformation($"Dosya zaten hedefte ve doğrulandı: {Path.GetFileName(item.SourcePath)}");
                                 continue;
                             }
+                        }
+                    }
+                    else
+                    {
+                        if (job.CopyMode == CopyMode.Mirror)
+                        {
+                            _logService?.LogInformation($"[MIRROR DECISION] Source='{item.SourcePath}' Destination='{item.DestinationPath}' SourceExists=True DestinationExists=False Decision=Copy Reason=DestinationMissing");
                         }
                     }
 
@@ -655,6 +691,7 @@ namespace ScheduledCopyManager.Infrastructure.Services
 
                             filesCopied++;
                             currentBytesCopied += item.Length;
+                            physicalBytesWritten += item.Length;
                             fileResultItem.Status = FileItemStatus.Completed;
                             fileResultItem.BytesTransferred = item.Length;
                             fileResultItem.ErrorMessage = null;
@@ -832,7 +869,7 @@ namespace ScheduledCopyManager.Infrastructure.Services
                 result.FilesFailed = filesFailed;
                 result.FilesIncomplete = filesIncomplete;
                 result.BytesCopied = currentBytesCopied;
-                result.BytesWrittenThisExecution = currentBytesCopied;
+                result.BytesWrittenThisExecution = physicalBytesWritten;
                 result.Status = JobResultStatus.Cancelled;
                 result.Success = false;
 
@@ -844,6 +881,7 @@ namespace ScheduledCopyManager.Infrastructure.Services
             result.FilesSkipped = filesSkipped;
             result.FilesFailed = filesFailed;
             result.BytesCopied = currentBytesCopied;
+            result.BytesWrittenThisExecution = physicalBytesWritten;
 
             if (hasFatalDiscoveryError || filesFailed > 0)
             {

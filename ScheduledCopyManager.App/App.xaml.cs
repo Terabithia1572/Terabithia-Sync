@@ -165,7 +165,15 @@ namespace ScheduledCopyManager.App
                 }
                 else
                 {
-                    _notifyIcon.Icon = SystemIcons.Application;
+                    string? exePath = System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName;
+                    if (!string.IsNullOrEmpty(exePath) && File.Exists(exePath))
+                    {
+                        _notifyIcon.Icon = System.Drawing.Icon.ExtractAssociatedIcon(exePath) ?? SystemIcons.Application;
+                    }
+                    else
+                    {
+                        _notifyIcon.Icon = SystemIcons.Application;
+                    }
                 }
             }
             catch
